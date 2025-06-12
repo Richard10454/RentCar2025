@@ -1,0 +1,467 @@
+﻿@model RentCar.Models.Renta
+
+@{
+    ViewData["Title"] = "Registrar Renta";
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8" />
+    <title>@ViewData["Title"]</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600;700&display=swap" rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css" rel="stylesheet" />
+    <style>
+        /* Estilos generales */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Poppins", sans-serif;
+        }
+
+        body {
+            background-image: url("website-forms-bg.jpg");
+            background-size: cover;
+            background-position: center;
+            min-height: 100vh;
+            overflow: hidden;
+        }
+
+
+        .toggle_switch_container {
+            margin-top: 30px;
+            display: flex;
+            align-items: center;
+            column-gap: 15px;
+            font-size: 16px;
+            color: #0b0217;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.4s ease 1s;
+        }
+
+        .form_container.active .toggle_switch_container {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 48px; /* Width of the switch */
+            height: 28px; /* Height of the switch */
+        }
+
+            .switch input {
+                opacity: 0;
+                width: 0;
+                height: 0;
+            }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: 0.4s;
+            border-radius: 28px;
+        }
+
+            .slider:before {
+                position: absolute;
+                content: "";
+                height: 20px;
+                width: 20px;
+                left: 4px;
+                bottom: 4px;
+                background-color: white;
+                transition: 0.4s;
+                border-radius: 50%;
+            }
+
+        input:checked + .slider {
+            background-color: #7d2ae8;
+        }
+
+        input:focus + .slider {
+            box-shadow: 0 0 1px #7d2ae8;
+        }
+
+        input:checked + .slider:before {
+            transform: translateX(20px);
+        }
+
+        .toggle_label {
+            cursor: pointer;
+        }
+
+        .home {
+            position: relative;
+            height: 100vh;
+            width: 100%;
+        }
+
+            .home::before {
+                content: "";
+                position: absolute;
+                height: 100%;
+                width: 100%;
+                background-color: rgba(0, 0, 0, 0.6);
+                z-index: 100;
+                opacity: 0;
+                transition: opacity 0.5s ease;
+            }
+
+            .home.active::before {
+                opacity: 1;
+            }
+
+        .form_container {
+            position: absolute;
+            max-width: 600px;
+            width: 90%;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(0.8);
+            z-index: 101;
+            background: #fff;
+            padding: 40px;
+            border-radius: 16px;
+            box-shadow: 0 5px 25px rgba(0,0,0,0.35);
+            opacity: 0;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+            .form_container.active {
+                opacity: 1;
+                transform: translate(-50%, -50%) scale(1);
+            }
+
+        .form_close {
+            position: absolute;
+            top: 10px;
+            right: 20px;
+            color: #0b0217;
+            font-size: 22px;
+            opacity: 0.7;
+            cursor: pointer;
+            transition: transform 0.2s, opacity 0.2s;
+        }
+
+            .form_close:hover {
+                opacity: 1;
+                transform: rotate(90deg);
+            }
+
+        .form_container h2 {
+            font-size: 22px;
+            color: #0b0217;
+            text-align: center;
+            margin-bottom: 10px;
+            opacity: 0;
+            animation: fadeIn 0.5s ease 0.3s forwards;
+        }
+
+        .input_box {
+            position: relative;
+            margin-top: 30px;
+            width: 100%;
+            height: 50px;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.4s ease;
+        }
+
+            .input_box:nth-child(1) {
+                transition-delay: 0.4s;
+            }
+
+            .input_box:nth-child(2) {
+                transition-delay: 0.5s;
+            }
+
+            .input_box:nth-child(3) {
+                transition-delay: 0.6s;
+            }
+
+            .input_box:nth-child(4) {
+                transition-delay: 0.7s;
+            }
+
+            .input_box:nth-child(5) {
+                transition-delay: 0.8s;
+            }
+
+            .input_box:nth-child(6) {
+                transition-delay: 0.9s;
+            }
+
+            .input_box:nth-child(7) {
+                transition-delay: 1.0s;
+            }
+
+            .input_box:nth-child(8) {
+                transition-delay: 1.1s;
+            }
+
+            .input_box:nth-child(9) {
+                transition-delay: 1.2s;
+            }
+
+            .input_box:nth-child(10) {
+                transition-delay: 1.3s;
+            }
+
+        .form_container.active .input_box {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .input_box input,
+        .input_box select {
+            height: 100%;
+            width: 100%;
+            border: none;
+            outline: none;
+            padding: 0 35px;
+            font-size: 16px;
+            border-bottom: 2px solid #aaaaaa;
+            transition: border-color 0.3s ease;
+            background-color: transparent;
+        }
+
+            .input_box input:focus,
+            .input_box select:focus {
+                border-color: #7d2ae8;
+            }
+
+        .input_box i {
+            position: absolute;
+            top: 50%;
+            left: 0;
+            transform: translateY(-50%);
+            font-size: 20px;
+            color: #707070;
+            transition: color 0.3s ease;
+            z-index: 1;
+        }
+
+        .input_box input:focus ~ i,
+        .input_box select:focus ~ i {
+            color: #7d2ae8;
+        }
+
+        .checkbox {
+            margin-top: 30px;
+            display: flex;
+            align-items: center;
+            column-gap: 8px;
+            font-size: 13px;
+            color: #0b0217;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.4s ease 1.4s;
+        }
+
+        .form_container.active .checkbox {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .checkbox input {
+            accent-color: #7d2ae8;
+            cursor: pointer;
+        }
+
+        .form_container .button {
+            font-size: 16px;
+            background: #7d2ae8;
+            color: #fff;
+            margin-top: 40px;
+            width: 100%;
+            padding: 15px 0;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: background 0.3s, transform 0.2s;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.4s ease 1.5s;
+        }
+
+        .form_container.active .button {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .form_container .button:hover {
+            background: #6825c1;
+            transform: translateY(-2px);
+        }
+
+        .login_signup {
+            font-size: 12px;
+            text-align: center;
+            margin-top: 25px;
+            opacity: 0;
+            transition: opacity 0.4s ease 1.6s;
+        }
+
+        .form_container.active .login_signup {
+            opacity: 1;
+        }
+
+        .text-danger {
+            font-size: 12px;
+            color: #e74c3c;
+            display: block;
+            margin-top: 3px;
+        }
+
+        a {
+            color: #7d2ae8;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+            a:hover {
+                color: #6825c1;
+                text-decoration: underline;
+            }
+
+        @@keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
+
+        @@keyframes slideIn {
+            from {
+                transform: translateY(20px);
+                opacity: 0;
+            }
+
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="home" id="home">
+        <div class="form_container" id="formContainer">
+            <span class="form_close" onclick="window.location.href='@Url.Action("Index")'">&times;</span>
+            <h2>Registrar Renta</h2>
+
+            <form asp-action="Create">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+                <div class="input_box">
+                    <select asp-for="EmpleadoId" asp-items="ViewBag.EmpleadoId">
+                        <option value="">Seleccione empleado</option>
+                    </select>
+                    <i class="bi bi-person-badge"></i>
+                    <span asp-validation-for="EmpleadoId" class="text-danger"></span>
+                </div>
+
+                <div class="input_box">
+                    <select asp-for="VehiculoId" asp-items="ViewBag.VehiculoId">
+                        <option value="">Seleccione vehículo</option>
+                    </select>
+                    <i class="bi bi-car-front"></i>
+                    <span asp-validation-for="VehiculoId" class="text-danger"></span>
+                </div>
+
+                <div class="input_box">
+                    <select asp-for="ClienteId" asp-items="ViewBag.ClienteId">
+                        <option value="">Seleccione cliente</option>
+                    </select>
+                    <i class="bi bi-person"></i>
+                    <span asp-validation-for="ClienteId" class="text-danger"></span>
+                </div>
+
+                <div class="input_box">
+                    <input asp-for="FechaRenta" type="date" placeholder="Fecha de renta" />
+                    <i class="bi bi-calendar"></i>
+                    <span asp-validation-for="FechaRenta" class="text-danger"></span>
+                </div>
+
+                <div class="input_box">
+                    <input asp-for="FechaDevolucion" type="date" placeholder="Fecha de devolución" />
+                    <i class="bi bi-calendar-check"></i>
+                    <span asp-validation-for="FechaDevolucion" class="text-danger"></span>
+                </div>
+
+                <div class="input_box">
+                    <input asp-for="MontoPorDia" placeholder="Monto por día" />
+                    <i class="bi bi-cash-stack"></i>
+                    <span asp-validation-for="MontoPorDia" class="text-danger"></span>
+                </div>
+
+                <div class="input_box">
+                    <input asp-for="CantidadDias" placeholder="Cantidad de días" />
+                    <i class="bi bi-calendar-week"></i>
+                    <span asp-validation-for="CantidadDias" class="text-danger"></span>
+                </div>
+
+                <div class="input_box">
+                    <input asp-for="Comentario" placeholder="Comentario" />
+                    <i class="bi bi-chat-text"></i>
+                    <span asp-validation-for="Comentario" class="text-danger"></span>
+                </div>
+
+                <div class="input_box">
+                    <select asp-for="InspeccionId" asp-items="ViewBag.InspeccionId">
+                        <option value="">Seleccione inspección</option>
+                    </select>
+                    <i class="bi bi-clipboard-check"></i>
+                    <span asp-validation-for="InspeccionId" class="text-danger"></span>
+                </div>
+
+                <div class="toggle_switch_container">
+                    <label class="switch">
+                        <input asp-for="Estado" type="checkbox" id="estadoToggle" />
+                        <span class="slider round"></span>
+                    </label>
+                    <label for="estadoToggle" class="toggle_label">Activo</label>
+                </div>
+
+                <button type="submit" class="button">Registrar</button>
+
+                <div class="login_signup">
+                    <a asp-action="Index">← Volver a la lista</a>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const home = document.getElementById('home');
+            const formContainer = document.getElementById('formContainer');
+
+            setTimeout(() => {
+                home.classList.add('active');
+                formContainer.classList.add('active');
+            }, 50);
+        });
+    </script>
+
+    @section Scripts {
+        @{
+            await Html.RenderPartialAsync("_ValidationScriptsPartial");
+        }
+    }
+</body>
+</html>

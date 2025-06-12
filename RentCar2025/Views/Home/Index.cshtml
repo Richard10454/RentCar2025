@@ -1,0 +1,468 @@
+﻿@model RentCar2025.Migrations.Models.ViewModels.HomeDashboardViewModel
+
+@{
+    ViewData["Title"] = "Dashboard";
+    Layout = "_Layout";
+}
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css" rel="stylesheet">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" rel="stylesheet">
+<link rel="stylesheet" href="~/css/Index.css" />
+
+
+
+
+<div class="container-fluid py-4">
+    <div class="dashboard-header animate__animated animate__fadeIn">
+        <h1 class="display-5 fw-bold">Bienvenido al Sistema RentCar</h1>
+        <p class="lead">Gestión integral de vehículos y flota automotriz</p>
+    </div>
+
+
+    <div id="statCardsCarousel" class="carousel slide" data-bs-ride="carousel" data-bs-interval="7000">
+        <div class="carousel-inner">
+            <div class="carousel-item active">
+                <div class="row gx-3">
+                    <div class="col-md-3">
+                        <div class="stat-card animate__animated animate__fadeInUp">
+                            <div class="card-icon icon-vehiculos">
+                                <i class="bi bi-car-front-fill"></i>
+                            </div>
+                            <div class="stat-number">@Model.TotalVehiculos</div>
+                            <div class="stat-title">Vehículos registrados</div>
+                            <a href="@Url.Action("Index", "Vehiculos")" class="stat-link">
+                                Ver todos <i class="bi bi-arrow-right"></i>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="stat-card animate__animated animate__fadeInUp">
+                            <div class="card-icon icon-marcas">
+                                <i class="bi bi-tags-fill"></i>
+                            </div>
+                            <div class="stat-number">@Model.TotalMarcas</div>
+                            <div class="stat-title">Marcas disponibles</div>
+                            <a href="@Url.Action("Index", "Marcas")" class="stat-link">
+                                Ver todas <i class="bi bi-arrow-right"></i>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="stat-card animate__animated animate__fadeInUp">
+                            <div class="card-icon icon-modelos">
+                                <i class="bi bi-car-front"></i>
+                            </div>
+                            <div class="stat-number">@Model.TotalModelos</div>
+                            <div class="stat-title">Modelos registrados</div>
+                            <a href="@Url.Action("Index", "Modelos")" class="stat-link">
+                                Ver todos <i class="bi bi-arrow-right"></i>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="stat-card animate__animated animate__fadeInUp">
+                            <div class="card-icon icon-tipos">
+                                <i class="bi bi-card-checklist"></i>
+                            </div>
+                            <div class="stat-number">@Model.TotalTiposVehiculo</div>
+                            <div class="stat-title">Tipos de vehículos</div>
+                            <a href="@Url.Action("Index", "TipoVehiculos")" class="stat-link">
+                                Ver todos <i class="bi bi-arrow-right"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="carousel-item">
+                <div class="row gx-3">
+                    <div class="col-md-3">
+                        <div class="stat-card animate__animated animate__fadeInUp">
+                            <div class="card-icon icon-clientes">
+                                <i class="bi bi-people-fill"></i>
+                            </div>
+                            <div class="stat-number">@Model.TotalClientes</div>
+                            <div class="stat-title">Clientes registrados</div>
+                            <a href="@Url.Action("Index", "Clientes")" class="stat-link">
+                                Ver todos <i class="bi bi-arrow-right"></i>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="stat-card animate__animated animate__fadeInUp">
+                            <div class="card-icon icon-rentas">
+                                <i class="bi bi-file-earmark-text-fill"></i>
+                            </div>
+                            <div class="stat-number">@Model.TotalRentas</div>
+                            <div class="stat-title">Rentas realizadas</div>
+                            <a href="@Url.Action("Index", "Rentas")" class="stat-link">
+                                Ver todas <i class="bi bi-arrow-right"></i>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="stat-card animate__animated animate__fadeInUp">
+                            <div class="card-icon icon-empleados">
+                                <i class="bi bi-person-badge-fill"></i>
+                            </div>
+                            <div class="stat-number">@Model.TotalEmpleados</div>
+                            <div class="stat-title">Empleados activos</div>
+                            <a href="@Url.Action("Index", "Empleados")" class="stat-link">
+                                Ver todos <i class="bi bi-arrow-right"></i>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="stat-card animate__animated animate__fadeInUp">
+                            <div class="card-icon icon-inspecciones">
+                                <i class="bi bi-clipboard-check-fill"></i>
+                            </div>
+                            <div class="stat-number">@Model.TotalInspecciones</div>
+                            <div class="stat-title">Inspecciones</div>
+                            <a href="@Url.Action("Index", "Inspecciones")" class="stat-link">
+                                Ver todas <i class="bi bi-arrow-right"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <button class="carousel-control-prev" type="button" data-bs-target="#statCardsCarousel" data-bs-slide="prev">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Previous</span>
+        </button>
+        <button class="carousel-control-next" type="button" data-bs-target="#statCardsCarousel" data-bs-slide="next">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Next</span>
+        </button>
+    </div>
+
+    <div class="row mt-4">
+        <div class="col-lg-6">
+            <div class="recent-section animate__animated animate__fadeIn">
+                <h3 class="section-title"><i class="bi bi-clock-history"></i> Últimos vehículos agregados</h3>
+
+                @if (Model.UltimosVehiculos != null && Model.UltimosVehiculos.Any())
+                {
+                    @foreach (var vehiculo in Model.UltimosVehiculos)
+                    {
+                        <div class="recent-item">
+                            <div class="item-icon icon-vehiculos">
+                                <i class="bi bi-car-front-fill"></i>
+                            </div>
+                            <div class="item-details">
+                                <div class="item-title">@vehiculo.Descripcion</div>
+                                <div class="item-meta">Placa: @vehiculo.NoPlaca | Chasis: @vehiculo.NoChasis</div>
+                            </div>
+                            <div>
+                                <span class="status-badge @(vehiculo.Estado ? "status-active" : "status-inactive")">
+                                    @(vehiculo.Estado ? "Activo" : "Inactivo")
+                                </span>
+                            </div>
+                        </div>
+                    }
+                }
+                else
+                {
+                    <p class="text-center text-muted">No hay vehículos recientes para mostrar.</p>
+                }
+
+                <div class="view-all">
+                    <a href="@Url.Action("Index", "Vehiculos")" class="stat-link">
+                        Ver todos los vehículos <i class="bi bi-arrow-right"></i>
+                    </a>
+                </div>
+            </div>
+
+            <div class="recent-section animate__animated animate__fadeIn mt-4">
+                <h3 class="section-title"><i class="bi bi-card-list"></i> Últimos modelos agregados</h3>
+
+                @if (Model.UltimosModelos != null && Model.UltimosModelos.Any())
+                {
+                    @foreach (var modelo in Model.UltimosModelos)
+                    {
+                        <div class="recent-item">
+                            <div class="item-icon icon-modelos">
+                                <i class="bi bi-car-front"></i>
+                            </div>
+                            <div class="item-details">
+                                <div class="item-title">@modelo.Descripcion</div>
+                                <div class="item-meta">Marca: @modelo.Marca.Descripcion</div>
+                            </div>
+                            <div>
+                                <span class="status-badge @(modelo.Estado ? "status-active" : "status-inactive")">
+                                    @(modelo.Estado ? "Activo" : "Inactivo")
+                                </span>
+                            </div>
+                        </div>
+                    }
+                }
+                else
+                {
+                    <p class="text-center text-muted">No hay modelos recientes para mostrar.</p>
+                }
+
+                <div class="view-all">
+                    <a href="@Url.Action("Index", "Modelos")" class="stat-link">
+                        Ver todos los modelos <i class="bi bi-arrow-right"></i>
+                    </a>
+                </div>
+            </div>
+
+            <div class="recent-section animate__animated animate__fadeIn mt-4">
+                <h3 class="section-title"><i class="bi bi-tags"></i> Últimas marcas agregadas</h3>
+
+                @if (Model.UltimasMarcas != null && Model.UltimasMarcas.Any())
+                {
+                    @foreach (var marca in Model.UltimasMarcas)
+                    {
+                        <div class="recent-item">
+                            <div class="item-icon icon-marcas">
+                                <i class="bi bi-tag-fill"></i>
+                            </div>
+                            <div class="item-details">
+                                <div class="item-title">@marca.Descripcion</div>
+                            </div>
+                            <div>
+                                <span class="status-badge @(marca.Estado ? "status-active" : "status-inactive")">
+                                    @(marca.Estado ? "Activo" : "Inactivo")
+                                </span>
+                            </div>
+                        </div>
+                    }
+                }
+                else
+                {
+                    <p class="text-center text-muted">No hay marcas recientes para mostrar.</p>
+                }
+
+                <div class="view-all">
+                    <a href="@Url.Action("Index", "Marcas")" class="stat-link">
+                        Ver todas las marcas <i class="bi bi-arrow-right"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-6">
+            <div class="row h-100">
+                <div class="col-md-12 mb-4 animate__animated animate__fadeIn">
+                    <div class="chart-container">
+                        <h3 class="section-title"><i class="bi bi-pie-chart-fill"></i> Distribución por Tipos de Vehículo</h3>
+                        <div class="chart-canvas-wrapper">
+                            <canvas id="vehicleTypesChart" height="250"></canvas>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-12 mb-4 animate__animated animate__fadeIn">
+                    <div class="chart-container">
+                        <h3 class="section-title"><i class="bi bi-bar-chart-fill"></i> Distribución por Marcas</h3>
+                        <div class="chart-canvas-wrapper">
+                            <canvas id="brandsChart" height="250"></canvas>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-12 animate__animated animate__fadeIn">
+                    <div class="chart-container">
+                        <h3 class="section-title"><i class="bi bi-bar-chart-steps"></i> Distribución por Modelos</h3>
+                        <div class="chart-canvas-wrapper">
+                            <canvas id="modelsChart" height="250"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="quick-actions animate__animated animate__fadeInUp">
+        <a href="@Url.Action("Create", "Vehiculos")" class="quick-action">
+            <div class="action-icon action-1">
+                <i class="bi bi-plus-lg"></i>
+            </div>
+            <div class="action-text">Agregar vehículo</div>
+        </a>
+
+        <a href="@Url.Action("Create", "Marcas")" class="quick-action">
+            <div class="action-icon action-2">
+                <i class="bi bi-tag-fill"></i>
+            </div>
+            <div class="action-text">Registrar marca</div>
+        </a>
+
+        <a href="@Url.Action("Create", "Modelos")" class="quick-action">
+            <div class="action-icon action-3">
+                <i class="bi bi-car-front"></i>
+            </div>
+            <div class="action-text">Crear modelo</div>
+        </a>
+
+        <a href="@Url.Action("Create", "TipoVehiculos")" class="quick-action">
+            <div class="action-icon action-4">
+                <i class="bi bi-card-checklist"></i>
+            </div>
+            <div class="action-text">Nuevo tipo</div>
+        </a>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+        
+            const vehicleTypesData = {
+                labels: ['Sedán', 'SUV', 'Pickup', 'Hatchback', 'Deportivos'],
+                datasets: [{
+                    data: [35, 25, 20, 15, 5], 
+                    backgroundColor: [
+                        '#6C4DFF', 
+                        '#FF7D4D', 
+                        '#4DFF9E', 
+                        '#2A2D3E', 
+                        '#FFC94D'  
+                    ],
+                    borderWidth: 0
+                }]
+            };
+
+            const brandsData = {
+                labels: ['Toyota', 'Honda', 'Nissan', 'Ford', 'Chevrolet'],
+                datasets: [{
+                    label: 'Número de Vehículos',
+                    data: [15, 10, 8, 7, 5], 
+                    backgroundColor: [
+                        'rgba(108, 77, 255, 0.7)',
+                        'rgba(255, 125, 77, 0.7)',
+                        'rgba(77, 255, 158, 0.7)',
+                        'rgba(42, 45, 62, 0.7)',
+                        'rgba(255, 201, 77, 0.7)'
+                    ],
+                    borderColor: [
+                        '#6C4DFF',
+                        '#FF7D4D',
+                        '#4DFF9E',
+                        '#2A2D3E',
+                        '#FFC94D'
+                    ],
+                    borderWidth: 1
+                }]
+            };
+
+            const modelsData = {
+                labels: ['Corolla', 'CR-V', 'Frontier', 'F-150', 'Camaro'],
+                datasets: [{
+                    label: 'Cantidad',
+                    data: [10, 8, 6, 5, 3], 
+                    backgroundColor: [
+                        'rgba(108, 77, 255, 0.8)',
+                        'rgba(255, 125, 77, 0.8)',
+                        'rgba(77, 255, 158, 0.8)',
+                        'rgba(42, 45, 62, 0.8)',
+                        'rgba(255, 201, 77, 0.8)'
+                    ],
+                    borderColor: [
+                        '#6C4DFF',
+                        '#FF7D4D',
+                        '#4DFF9E',
+                        '#2A2D3E',
+                        '#FFC94D'
+                    ],
+                    borderWidth: 1
+                }]
+            };
+
+       
+            const chartOptions = {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'right',
+                        labels: {
+                            boxWidth: 12,
+                            padding: 20,
+                            usePointStyle: true,
+                            pointStyle: 'circle'
+                        }
+                    },
+                    tooltip: {
+                        enabled: true
+                    }
+                }
+            };
+
+        
+            new Chart(document.getElementById('vehicleTypesChart').getContext('2d'), {
+                type: 'doughnut',
+                data: vehicleTypesData,
+                options: {
+                    ...chartOptions,
+                    cutout: '70%'
+                }
+            });
+
+  
+            new Chart(document.getElementById('brandsChart').getContext('2d'), {
+                type: 'bar',
+                data: brandsData,
+                options: {
+                    ...chartOptions,
+                    indexAxis: 'y', 
+                    scales: {
+                        x: {
+                            beginAtZero: true,
+                            grid: {
+                                display: false
+                            }
+                        },
+                        y: {
+                            grid: {
+                                display: false
+                            }
+                        }
+                    },
+                    plugins: {
+                        ...chartOptions.plugins,
+                        legend: {
+                            display: false 
+                        }
+                    }
+                }
+            });
+
+         
+            new Chart(document.getElementById('modelsChart').getContext('2d'), {
+                type: 'bar',
+                data: modelsData,
+                options: {
+                    ...chartOptions,
+                    scales: {
+                        x: {
+                            beginAtZero: true,
+                            grid: {
+                                display: false
+                            }
+                        },
+                        y: {
+                            grid: {
+                                display: false
+                            }
+                        }
+                    },
+                    plugins: {
+                        ...chartOptions.plugins,
+                        legend: {
+                            display: false 
+                        }
+                    }
+                }
+            });
+
+
+            const animateElements = document.querySelectorAll('.animate__animated');
+            animateElements.forEach((el, index) => {
+                el.style.animationDelay = `${index * 0.05}s`; 
+            });
+        });
+    </script>
+}

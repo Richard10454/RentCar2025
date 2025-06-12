@@ -1,0 +1,585 @@
+﻿@model IEnumerable<RentCar.Models.Renta>
+
+@{
+    ViewData["Title"] = "Rentas";
+    Layout = "_Layout";
+}
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css" rel="stylesheet" />
+
+<style>
+    :root {
+        --primary-color: #6C4DFF;
+        --hover-color: #5a3ee0;
+        --header-bg: #fff4b1;
+        --row-hover: #f9f9f9;
+        --border-color: #eee;
+        --text-color: #333;
+        --secondary-text: #555;
+    }
+
+    .main-content {
+        background: #f0f2fa;
+        min-height: calc(100vh - 60px);
+        padding: 20px;
+    }
+
+    .custom-container {
+        background: white;
+        border-radius: 20px;
+        padding: 25px;
+        margin: 20px auto;
+        width: 95%;
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+        transform: translateY(20px);
+        opacity: 0;
+        animation: slideUp 0.6s ease-out 0.2s forwards;
+    }
+
+    @@keyframes slideUp {
+        to {
+            transform: translateY(0);
+            opacity: 1;
+        }
+    }
+
+    .table-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        margin-bottom: 25px;
+        gap: 15px;
+    }
+
+        .table-header h2 {
+            font-size: 26px;
+            font-weight: 600;
+            color: var(--text-color);
+            margin: 0;
+        }
+
+    .btn-purple {
+        background-color: var(--primary-color);
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 20px;
+        text-decoration: none;
+        font-weight: 500;
+        transition: all 0.3s ease;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+        .btn-purple:hover {
+            background-color: var(--hover-color);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(92, 77, 255, 0.2);
+        }
+
+    .input-search {
+        position: relative;
+        flex-grow: 1;
+        max-width: 400px;
+        min-width: 200px;
+    }
+
+        .input-search input {
+            border: 1px solid #ddd;
+            border-radius: 20px;
+            padding: 10px 40px 10px 15px;
+            outline: none;
+            width: 100%;
+            transition: all 0.3s ease;
+            font-family: 'Poppins', sans-serif;
+        }
+
+            .input-search input:focus {
+                border-color: var(--primary-color);
+                box-shadow: 0 0 0 2px rgba(108, 77, 255, 0.2);
+            }
+
+        .input-search button {
+            background: none;
+            border: none;
+            position: absolute;
+            right: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #aaa;
+            cursor: pointer;
+            transition: color 0.3s ease;
+        }
+
+        .input-search input:focus + button i {
+            color: var(--primary-color);
+        }
+
+    .styled-table {
+        width: 100%;
+        border-collapse: collapse;
+        border-radius: 10px;
+        overflow: hidden;
+        margin: 20px 0;
+    }
+
+        .styled-table thead {
+            background-color: var(--header-bg);
+            color: var(--text-color);
+        }
+
+            .styled-table thead th {
+                padding: 15px;
+                text-align: left;
+                font-size: 14px;
+                font-weight: 600;
+                position: relative;
+                transition: background-color 0.3s ease;
+            }
+
+                .styled-table thead th:hover {
+                    background-color: #ffe878;
+                }
+
+        .styled-table tbody tr {
+            opacity: 0;
+            transform: translateX(-10px);
+            animation: fadeInRow 0.4s ease-out forwards;
+        }
+
+    @@keyframes fadeInRow {
+        to {
+            opacity: 1;
+            transform: translateX(0);
+        }
+    }
+
+    .styled-table tbody tr:nth-child(1) {
+        animation-delay: 0.3s;
+    }
+
+    .styled-table tbody tr:nth-child(2) {
+        animation-delay: 0.4s;
+    }
+
+    .styled-table tbody tr:nth-child(3) {
+        animation-delay: 0.5s;
+    }
+
+    .styled-table tbody tr:nth-child(4) {
+        animation-delay: 0.6s;
+    }
+
+    .styled-table tbody tr:nth-child(5) {
+        animation-delay: 0.7s;
+    }
+
+    .styled-table tbody tr:nth-child(n+6) {
+        animation-delay: 0.8s;
+    }
+
+    .styled-table tbody td {
+        padding: 15px;
+        font-size: 14px;
+        border-bottom: 1px solid var(--border-color);
+        transition: background-color 0.3s ease;
+    }
+
+    .styled-table tbody tr:hover {
+        background-color: var(--row-hover);
+    }
+
+        .styled-table tbody tr:hover td {
+            background-color: var(--row-hover);
+        }
+
+    .operations-cell {
+        display: flex;
+        gap: 12px;
+    }
+
+    .icon {
+        font-size: 18px;
+        color: var(--secondary-text);
+        transition: all 0.3s ease;
+        cursor: pointer;
+    }
+
+    .icon-edit:hover {
+        color: #3498db;
+        transform: scale(1.1);
+    }
+
+    .icon-details:hover {
+        color: #2ecc71;
+        transform: scale(1.1);
+    }
+
+    .icon-delete:hover {
+        color: #e74c3c;
+        transform: scale(1.1);
+    }
+
+    .table-footer {
+        margin-top: 20px;
+        text-align: right;
+        font-size: 14px;
+        color: var(--secondary-text);
+        opacity: 0;
+        animation: fadeIn 0.5s ease-out 0.8s forwards;
+    }
+
+    .status-badge {
+        display: inline-block;
+        padding: 4px 10px;
+        border-radius: 12px;
+        font-size: 12px;
+        font-weight: 500;
+    }
+
+    .status-active {
+        background-color: #e8f5e9;
+        color: #2e7d32;
+    }
+
+    .status-inactive {
+        background-color: #ffebee;
+        color: #c62828;
+    }
+
+    /* Estilos para el sistema de alertas */
+    .alert-container {
+        position: fixed;
+        top: 80px; /* Ajustado para que no se solape con la navbar */
+        right: 20px;
+        z-index: 1000;
+        max-width: 350px;
+        width: 100%;
+    }
+
+    .alert {
+        padding: 18px 25px;
+        margin-bottom: 15px;
+        border-radius: 12px;
+        position: relative;
+        overflow: hidden;
+        display: flex;
+        align-items: center;
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        transform: translateX(120%);
+        opacity: 0;
+        animation: slideInRight 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55) forwards;
+        transition: all 0.4s ease;
+    }
+
+    .alert-success {
+        color: #0f5132;
+        background: linear-gradient(135deg, #d4edda, #c3e6cb);
+        border-left: 5px solid #0f5132;
+    }
+
+    .alert-error {
+        color: #842029;
+        background: linear-gradient(135deg, #f8d7da, #f5c2c7);
+        border-left: 5px solid #842029;
+    }
+
+    .alert-warning {
+        color: #664d03;
+        background: linear-gradient(135deg, #fff3cd, #ffecb5);
+        border-left: 5px solid #664d03;
+    }
+
+    .alert-info {
+        color: #055160;
+        background: linear-gradient(135deg, #cff4fc, #b6effb);
+        border-left: 5px solid #055160;
+    }
+
+    .alert-icon {
+        font-size: 24px;
+        margin-right: 15px;
+        flex-shrink: 0;
+    }
+
+    .alert-content {
+        flex-grow: 1;
+    }
+
+    .alert-title {
+        font-weight: 600;
+        margin-bottom: 3px;
+        font-size: 16px;
+    }
+
+    .alert-message {
+        font-size: 14px;
+        opacity: 0.9;
+    }
+
+    .close-btn {
+        margin-left: 15px;
+        cursor: pointer;
+        font-size: 20px;
+        opacity: 0.7;
+        transition: all 0.3s ease;
+        flex-shrink: 0;
+        padding: 5px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 28px;
+        height: 28px;
+    }
+
+        .close-btn:hover {
+            opacity: 1;
+            background-color: rgba(0, 0, 0, 0.1);
+            transform: rotate(90deg);
+        }
+
+    .progress-bar {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        height: 4px;
+        background-color: rgba(15, 81, 50, 0.3);
+        width: 100%;
+        transform-origin: left;
+        transform: scaleX(1);
+        animation: progressBar 5s linear forwards;
+    }
+
+    /* Animaciones */
+    @@keyframes slideInRight {
+        to {
+            transform: translateX(0);
+            opacity: 1;
+        }
+    }
+
+    @@keyframes progressBar {
+        from {
+            transform: scaleX(1);
+        }
+
+        to {
+            transform: scaleX(0);
+        }
+    }
+
+    /* Efecto al cerrar */
+    .alert.hide {
+        animation: slideOutRight 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55) forwards;
+    }
+
+    @@keyframes slideOutRight {
+        from {
+            transform: translateX(0);
+            opacity: 1;
+        }
+
+        to {
+            transform: translateX(120%);
+            opacity: 0;
+        }
+    }
+
+    /* Responsive adjustments */
+    @@media (max-width: 768px) {
+        .table-header {
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        .input-search {
+            width: 100%;
+            max-width: 100%;
+        }
+
+        .styled-table {
+            display: block;
+            overflow-x: auto;
+        }
+
+        .alert-container {
+            top: 70px;
+            right: 10px;
+            max-width: 280px;
+        }
+
+        .alert {
+            padding: 15px 20px;
+        }
+    }
+</style>
+
+<div class="main-content">
+    <div class="custom-container">
+        <div class="table-header">
+            <h2>Rentas Registradas</h2>
+            <a asp-action="Create" class="btn-purple">
+                <i class="bi bi-plus-lg"></i> NUEVA RENTA
+            </a>
+            <form asp-controller="Rentas" asp-action="Index" method="get" class="input-search">
+                <input type="search" name="searchString" placeholder="Buscar por cliente..." value="@Context.Request.Query["searchString"]" />
+                <button type="submit">
+                    <i class="bi bi-search"></i>
+                </button>
+            </form>
+        </div>
+
+        <table class="styled-table">
+            <thead>
+                <tr>
+                    <th>Empleado</th>
+                    <th>Vehículo</th>
+                    <th>Cliente</th>
+                    <th>F. Renta</th>
+                    <th>F. Devolución</th>
+                    <th>Monto/día</th>
+                    <th>Días</th>
+                    <th>Comentario</th>
+                    <th>Estado</th>
+                    <th>Inspección</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>@item.Empleado?.Nombre</td>
+                        <td>@item.Vehiculo?.Descripcion</td>
+                        <td>@item.Cliente?.Nombre</td>
+                        <td>@item.FechaRenta?.ToString("dd/MM/yyyy")</td>
+                        <td>@item.FechaDevolucion?.ToString("dd/MM/yyyy")</td>
+                        <td>@item.MontoPorDia.ToString("C")</td>
+                        <td>@item.CantidadDias</td>
+                        <td>@item.Comentario</td>
+                        <td>
+                            <span class="status-badge @(item.Estado ? "status-active" : "status-inactive")">
+                                @(item.Estado ? "Activo" : "Inactivo")
+                            </span>
+                        </td>
+                        <td>@item.Inspeccion?.Id</td>
+                        <td class="operations-cell">
+                            <a asp-action="Edit" asp-route-id="@item.Id" title="Editar">
+                                <i class="bi bi-pencil-square icon icon-edit"></i>
+                            </a>
+                            <a asp-action="Details" asp-route-id="@item.Id" title="Detalles">
+                                <i class="bi bi-info-circle icon icon-details"></i>
+                            </a>
+                            <a asp-action="Delete" asp-route-id="@item.Id" title="Eliminar">
+                                <i class="bi bi-trash icon icon-delete"></i>
+                            </a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+
+        <div class="table-footer">
+            <p>Total de rentas: @Model.Count()</p>
+        </div>
+    </div>
+</div>
+
+<!-- Sistema de alertas mejorado -->
+<div class="alert-container">
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success" id="successAlert">
+            <i class="bi bi-check-circle-fill alert-icon"></i>
+            <div class="alert-content">
+                <div class="alert-title">¡Éxito!</div>
+                <div class="alert-message">@TempData["SuccessMessage"]</div>
+            </div>
+            <span class="close-btn" onclick="dismissAlert(this.parentElement)">&times;</span>
+            <div class="progress-bar"></div>
+        </div>
+    }
+
+    @if (TempData["ErrorMessage"] != null)
+    {
+        <div class="alert alert-error" id="errorAlert">
+            <i class="bi bi-exclamation-triangle-fill alert-icon"></i>
+            <div class="alert-content">
+                <div class="alert-title">Error</div>
+                <div class="alert-message">@TempData["ErrorMessage"]</div>
+            </div>
+            <span class="close-btn" onclick="dismissAlert(this.parentElement)">&times;</span>
+            <div class="progress-bar" style="background-color: rgba(132, 32, 41, 0.3);"></div>
+        </div>
+    }
+
+    @if (TempData["WarningMessage"] != null)
+    {
+        <div class="alert alert-warning" id="warningAlert">
+            <i class="bi bi-exclamation-circle-fill alert-icon"></i>
+            <div class="alert-content">
+                <div class="alert-title">Advertencia</div>
+                <div class="alert-message">@TempData["WarningMessage"]</div>
+            </div>
+            <span class="close-btn" onclick="dismissAlert(this.parentElement)">&times;</span>
+            <div class="progress-bar" style="background-color: rgba(102, 77, 3, 0.3);"></div>
+        </div>
+    }
+
+    @if (TempData["InfoMessage"] != null)
+    {
+        <div class="alert alert-info" id="infoAlert">
+            <i class="bi bi-info-circle-fill alert-icon"></i>
+            <div class="alert-content">
+                <div class="alert-title">Información</div>
+                <div class="alert-message">@TempData["InfoMessage"]</div>
+            </div>
+            <span class="close-btn" onclick="dismissAlert(this.parentElement)">&times;</span>
+            <div class="progress-bar" style="background-color: rgba(5, 81, 96, 0.3);"></div>
+        </div>
+    }
+</div>
+
+@section Scripts {
+    <script>
+        function dismissAlert(alert) {
+            alert.classList.add('hide');
+            setTimeout(() => {
+                alert.remove();
+            }, 600);
+        }
+
+        document.addEventListener('DOMContentLoaded', function () {
+            // Animación para el contenedor principal
+            const container = document.querySelector('.custom-container');
+            if (container) {
+                container.style.animation = 'slideUp 0.6s ease-out 0.2s forwards';
+            }
+
+            // Animación para las filas de la tabla
+            const rows = document.querySelectorAll('.styled-table tbody tr');
+            rows.forEach((row, index) => {
+                row.style.animationDelay = `${0.3 + (index * 0.1)}s`;
+                row.style.animation = 'fadeInRow 0.4s ease-out forwards';
+            });
+
+            // Animación para el footer
+            const footer = document.querySelector('.table-footer');
+            if (footer) {
+                footer.style.animation = 'fadeIn 0.5s ease-out 0.8s forwards';
+            }
+
+            // Auto-dismiss alerts after 5 seconds
+            const alerts = document.querySelectorAll('.alert');
+            alerts.forEach(alert => {
+                setTimeout(() => {
+                    dismissAlert(alert);
+                }, 5000);
+            });
+        });
+    </script>
+}

@@ -1,0 +1,391 @@
+﻿@model RentCar.Models.Inspeccion
+
+@{
+    ViewData["Title"] = "Eliminar Inspección";
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8" />
+    <title>@ViewData["Title"]</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600;700&display=swap" rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css" rel="stylesheet" />
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Poppins", sans-serif;
+        }
+
+        body {
+            background-image: url("website-forms-bg.jpg"); 
+            background-size: cover;
+            background-position: center;
+            min-height: 100vh;
+            overflow: hidden; 
+        }
+
+        .home {
+            position: relative;
+            height: 100vh;
+            width: 100%;
+        }
+
+            .home::before {
+                content: "";
+                position: absolute;
+                height: 100%;
+                width: 100%;
+                background-color: rgba(0, 0, 0, 0.6);
+                z-index: 100;
+                opacity: 0;
+                transition: opacity 0.5s ease;
+            }
+
+            .home.active::before {
+                opacity: 1;
+            }
+
+        .delete_container {
+            position: absolute;
+            max-width: 700px;
+            width: 90%;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(0.8);
+            z-index: 101;
+            background: #fff;
+            padding: 40px;
+            border-radius: 16px;
+            box-shadow: 0 5px 25px rgba(0,0,0,0.35);
+            opacity: 0;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+            .delete_container.active {
+                opacity: 1;
+                transform: translate(-50%, -50%) scale(1);
+            }
+
+        .form_close {
+            position: absolute;
+            top: 10px;
+            right: 20px;
+            color: #0b0217;
+            font-size: 22px;
+            opacity: 0.7;
+            cursor: pointer;
+            transition: transform 0.2s, opacity 0.2s;
+        }
+
+            .form_close:hover {
+                opacity: 1;
+                transform: rotate(90deg);
+            }
+
+        .warning_icon {
+            display: block;
+            text-align: center;
+            font-size: 50px;
+            color: #e74c3c;
+            margin-bottom: 20px;
+            opacity: 0;
+            animation: fadeIn 0.5s ease 0.2s forwards;
+        }
+
+        .delete_container h2 {
+            font-size: 24px;
+            color: #e74c3c;
+            text-align: center;
+            margin-bottom: 15px;
+            opacity: 0;
+            animation: fadeIn 0.5s ease 0.3s forwards;
+        }
+
+        .delete_container h3 {
+            font-size: 18px;
+            color: #333;
+            text-align: center;
+            margin-bottom: 30px;
+            font-weight: 500;
+            opacity: 0;
+            animation: fadeIn 0.5s ease 0.4s forwards;
+        }
+
+        .details_list {
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .detail_label {
+            font-weight: 600;
+            color: #555;
+            text-align: right;
+            padding-right: 15px;
+            opacity: 0;
+            transform: translateX(-20px);
+            transition: all 0.4s ease;
+        }
+
+        .detail_value {
+            font-weight: 500;
+            color: #333;
+            padding-left: 15px;
+            opacity: 0;
+            transform: translateX(20px);
+            transition: all 0.4s ease;
+        }
+
+        .delete_container.active .detail_label,
+        .delete_container.active .detail_value {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        .detail_label:nth-child(1) {
+            transition-delay: 0.5s;
+        }
+
+        .detail_value:nth-child(2) {
+            transition-delay: 0.6s;
+        }
+
+        .detail_label:nth-child(3) {
+            transition-delay: 0.7s;
+        }
+
+        .detail_value:nth-child(4) {
+            transition-delay: 0.8s;
+        }
+
+        .detail_label:nth-child(5) {
+            transition-delay: 0.9s;
+        }
+
+        .detail_value:nth-child(6) {
+            transition-delay: 1.0s;
+        }
+
+        .detail_label:nth-child(7) {
+            transition-delay: 1.1s;
+        }
+
+        .detail_value:nth-child(8) {
+            transition-delay: 1.2s;
+        }
+
+        .detail_label:nth-child(9) {
+            transition-delay: 1.3s;
+        }
+
+        .detail_value:nth-child(10) {
+            transition-delay: 1.4s;
+        }
+
+        .detail_label:nth-child(11) {
+            transition-delay: 1.5s;
+        }
+
+        .detail_value:nth-child(12) {
+            transition-delay: 1.6s;
+        }
+
+        .detail_label:nth-child(13) {
+            transition-delay: 1.7s;
+        }
+
+        .detail_value:nth-child(14) {
+            transition-delay: 1.8s;
+        }
+
+        .detail_label:nth-child(15) {
+            transition-delay: 1.9s;
+        }
+
+        .detail_value:nth-child(16) {
+            transition-delay: 2.0s;
+        }
+
+        .detail_label:nth-child(17) {
+            transition-delay: 2.1s;
+        }
+
+        .detail_value:nth-child(18) {
+            transition-delay: 2.2s;
+        }
+
+        .detail_label:nth-child(19) {
+            transition-delay: 2.3s;
+        }
+
+        .detail_value:nth-child(20) {
+            transition-delay: 2.4s;
+        }
+
+        .detail_label:nth-child(21) {
+            transition-delay: 2.5s;
+        }
+
+        .detail_value:nth-child(22) {
+            transition-delay: 2.6s;
+        }
+
+
+        .delete_form {
+            margin-top: 40px;
+            text-align: center;
+            opacity: 0;
+            transition: opacity 0.4s ease 2.7s; 
+        }
+
+        .delete_container.active .delete_form {
+            opacity: 1;
+        }
+
+        .btn_delete, .btn_cancel {
+            padding: 12px 25px;
+            border-radius: 8px;
+            font-weight: 500;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+            display: inline-flex; 
+            align-items: center;
+            gap: 8px; 
+        }
+
+        .btn_delete {
+            background: #e74c3c;
+            color: white;
+            margin-right: 15px;
+        }
+
+            .btn_delete:hover {
+                background: #c0392b;
+                transform: translateY(-2px);
+            }
+
+        .btn_cancel {
+            background: #f1f1f1;
+            color: #333;
+        }
+
+            .btn_cancel:hover {
+                background: #ddd;
+                transform: translateY(-2px);
+            }
+
+        .status_active {
+            color: #27ae60;
+            font-weight: 600;
+        }
+
+        .status_inactive {
+            color: #e74c3c;
+            font-weight: 600;
+        }
+
+     
+        @@keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
+
+        @@keyframes slideIn {
+            from {
+                transform: translateY(20px);
+                opacity: 0;
+            }
+
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="home" id="home">
+        <div class="delete_container" id="deleteContainer">
+            <span class="form_close" onclick="window.location.href='@Url.Action("Index")'">&times;</span>
+            <div class="warning_icon">
+                <i class="bi bi-exclamation-triangle-fill"></i>
+            </div>
+            <h2>Eliminar Inspección</h2>
+            <h3>¿Estás seguro que deseas eliminar esta inspección?</h3>
+
+            <div class="details_list">
+                <div class="detail_label">@Html.DisplayNameFor(model => model.Vehiculo)</div>
+                <div class="detail_value">@Html.DisplayFor(model => model.Vehiculo.Id)</div>
+
+                <div class="detail_label">@Html.DisplayNameFor(model => model.Cliente)</div>
+                <div class="detail_value">@Html.DisplayFor(model => model.Cliente.Id)</div>
+
+                <div class="detail_label">@Html.DisplayNameFor(model => model.TieneRalladuras)</div>
+                <div class="detail_value">@(Model.TieneRalladuras ? "Sí" : "No")</div>
+
+                <div class="detail_label">@Html.DisplayNameFor(model => model.CantidadCombustible)</div>
+                <div class="detail_value">@Html.DisplayFor(model => model.CantidadCombustible)</div>
+
+                <div class="detail_label">@Html.DisplayNameFor(model => model.TieneGomaRespuesta)</div>
+                <div class="detail_value">@(Model.TieneGomaRespuesta ? "Sí" : "No")</div>
+
+                <div class="detail_label">@Html.DisplayNameFor(model => model.TieneGato)</div>
+                <div class="detail_value">@(Model.TieneGato ? "Sí" : "No")</div>
+
+                <div class="detail_label">@Html.DisplayNameFor(model => model.TieneRoturasCristal)</div>
+                <div class="detail_value">@(Model.TieneRoturasCristal ? "Sí" : "No")</div>
+
+                <div class="detail_label">@Html.DisplayNameFor(model => model.EstadoGomas)</div>
+                <div class="detail_value">@Html.DisplayFor(model => model.EstadoGomas)</div>
+
+                <div class="detail_label">@Html.DisplayNameFor(model => model.Fecha)</div>
+                <div class="detail_value">@Html.DisplayFor(model => model.Fecha)</div>
+
+                <div class="detail_label">@Html.DisplayNameFor(model => model.Empleado)</div>
+                <div class="detail_value">@Html.DisplayFor(model => model.Empleado.Id)</div>
+
+                <div class="detail_label">@Html.DisplayNameFor(model => model.Estado)</div>
+                <div class="detail_value @(Model.Estado ? "status_active" : "status_inactive")">
+                    @(Model.Estado ? "Activo" : "Inactivo")
+                </div>
+            </div>
+
+            <form asp-action="Delete" class="delete_form">
+                <input type="hidden" asp-for="Id" />
+                <button type="submit" class="btn_delete">
+                    <i class="bi bi-trash"></i> Eliminar
+                </button>
+                <a asp-action="Index" class="btn_cancel">
+                    <i class="bi bi-x-circle"></i> Cancelar
+                </a>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const home = document.getElementById('home');
+            const deleteContainer = document.getElementById('deleteContainer');
+
+            setTimeout(() => {
+                home.classList.add('active');
+                deleteContainer.classList.add('active');
+            }, 50);
+        });
+    </script>
+</body>
+</html>

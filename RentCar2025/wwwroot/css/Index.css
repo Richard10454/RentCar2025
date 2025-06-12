@@ -1,0 +1,405 @@
+﻿:root {
+    --primary-color: #6C4DFF;
+    --secondary-color: #FF7D4D;
+    --accent-color: #4DFF9E;
+    --dark-color: #2A2D3E;
+    --light-color: #F0F2FA;
+    --text-color: #333;
+    --text-light: #777;
+}
+
+body {
+    font-family: 'Poppins', sans-serif;
+    background-color: var(--light-color);
+    color: var(--text-color);
+    transition: background-color 0.8s ease, color 0.8s ease; /* Transición lenta para cambios de tema */
+}
+
+.dashboard-header {
+    background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+    color: white;
+    padding: 2rem;
+    border-radius: 15px;
+    margin-bottom: 2rem;
+    box-shadow: 0 10px 20px rgba(108, 77, 255, 0.2);
+    position: relative;
+    overflow: hidden;
+    transition: all 0.8s ease; /* Más lento */
+}
+
+    .dashboard-header::before {
+        content: '';
+        position: absolute;
+        top: -50px;
+        right: -50px;
+        width: 200px;
+        height: 200px;
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 50%;
+        transition: all 0.8s ease; /* Más lento */
+    }
+
+    .dashboard-header::after {
+        content: '';
+        position: absolute;
+        bottom: -80px;
+        right: -30px;
+        width: 250px;
+        height: 250px;
+        background: rgba(255, 255, 255, 0.05);
+        border-radius: 50%;
+        transition: all 0.8s ease; /* Más lento */
+    }
+
+.stat-card {
+    background: white;
+    border-radius: 12px;
+    padding: 1.5rem;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+    transition: all 2s cubic-bezier(0.1, 0.7, 0.1, 1); /* 2 segundos con curva personalizada */
+    text-align: center;
+    transform-style: preserve-3d;
+    perspective: 1000px;
+}
+
+    .stat-card:hover {
+        transform: translateY(-5px) rotateY(15deg);
+        box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+        transition: all 2s cubic-bezier(0.1, 0.7, 0.1, 1); /* 2 segundos */
+    }
+
+.card-icon {
+    width: 60px;
+    height: 60px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 1rem;
+    font-size: 1.5rem;
+    transition: all 2s ease; /* 2 segundos */
+    transform-style: preserve-3d;
+}
+
+/* Efecto especial para iconos al hover */
+.stat-card:hover .card-icon {
+    transform: rotateY(180deg) scale(1.1);
+    transition: all 2s cubic-bezier(0.68, -0.55, 0.27, 2); /* 2 segundos con efecto elástico */
+}
+
+/* Transiciones lentas para todos los tipos de iconos */
+.icon-vehiculos {
+    background-color: rgba(108, 77, 255, 0.1);
+    color: var(--primary-color);
+    transition: all 2s ease; /* 2 segundos */
+}
+
+.icon-marcas {
+    background-color: rgba(255, 125, 77, 0.1);
+    color: var(--secondary-color);
+    transition: all 2s ease; /* 2 segundos */
+}
+
+.icon-modelos {
+    background-color: rgba(77, 255, 158, 0.1);
+    color: var(--accent-color);
+    transition: all 2s ease; /* 2 segundos */
+}
+
+.icon-tipos {
+    background-color: rgba(42, 45, 62, 0.1);
+    color: var(--dark-color);
+    transition: all 2s ease; /* 2 segundos */
+}
+
+.icon-clientes {
+    background-color: rgba(75, 192, 192, 0.1);
+    color: #4BC0C0;
+    transition: all 2s ease; /* 2 segundos */
+}
+
+.icon-rentas {
+    background-color: rgba(153, 102, 255, 0.1);
+    color: #9966FF;
+    transition: all 2s ease; /* 2 segundos */
+}
+
+.icon-empleados {
+    background-color: rgba(255, 159, 64, 0.1);
+    color: #FF9F40;
+    transition: all 2s ease; /* 2 segundos */
+}
+
+.icon-inspecciones {
+    background-color: rgba(54, 162, 235, 0.1);
+    color: #36A2EB;
+    transition: all 2s ease; 
+}
+
+.icon-combustibles {
+    background-color: rgba(255, 99, 132, 0.1);
+    color: #FF6384;
+    transition: all 2s ease; 
+}
+
+.stat-number {
+    font-size: 2rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+    color: var(--primary-color);
+    transition: color 2s ease; 
+}
+
+.stat-title {
+    font-size: 1rem;
+    color: var(--text-light);
+    margin-bottom: 0.5rem;
+    transition: color 2s ease; 
+}
+
+.stat-link {
+    color: var(--primary-color);
+    text-decoration: none;
+    font-weight: 500;
+    display: inline-flex;
+    align-items: center;
+    transition: all 2s ease; 
+}
+
+    .stat-link:hover {
+        color: var(--secondary-color);
+        transition: all 2s cubic-bezier(0.68, -0.6, 0.32, 1.6); 
+    }
+
+    .stat-link i {
+        margin-left: 5px;
+        transition: transform 2s cubic-bezier(0.68, -0.6, 0.32, 2); 
+    }
+
+    .stat-link:hover i {
+        transform: translateX(10px) rotate(360deg); 
+    }
+
+.recent-section {
+    background: white;
+    border-radius: 15px;
+    padding: 1.5rem;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+    margin-bottom: 1.5rem;
+    transition: all 0.5s ease; 
+}
+
+.section-title {
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin-bottom: 1.5rem;
+    display: flex;
+    align-items: center;
+    transition: all 0.5s ease; /* Más lento */
+}
+
+    .section-title i {
+        margin-right: 10px;
+        color: var(--primary-color);
+        transition: all 0.5s ease; /* Más lento */
+    }
+
+.recent-item {
+    display: flex;
+    align-items: center;
+    padding: 0.75rem 0;
+    border-bottom: 1px solid #eee;
+    transition: all 0.5s ease; /* Más lento */
+}
+
+    .recent-item:last-child {
+        border-bottom: none;
+    }
+
+.item-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 1rem;
+    font-size: 1rem;
+    transition: all 0.5s ease; /* Más lento */
+}
+
+.item-details {
+    flex: 1;
+    transition: all 0.5s ease; /* Más lento */
+}
+
+.item-title {
+    font-weight: 500;
+    margin-bottom: 0.25rem;
+    transition: all 0.5s ease; /* Más lento */
+}
+
+.item-meta {
+    font-size: 0.85rem;
+    color: var(--text-light);
+    transition: all 0.5s ease; /* Más lento */
+}
+
+.view-all {
+    text-align: right;
+    margin-top: 1rem;
+    transition: all 0.5s ease; /* Más lento */
+}
+
+.status-badge {
+    display: inline-block;
+    padding: 0.25rem 0.75rem;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 500;
+    transition: all 0.5s ease; /* Más lento */
+}
+
+.status-active {
+    background-color: #e8f5e9;
+    color: #2e7d32;
+    transition: all 0.5s ease; /* Más lento */
+}
+
+.status-inactive {
+    background-color: #ffebee;
+    color: #c62828;
+    transition: all 0.5s ease; /* Más lento */
+}
+
+.chart-container {
+    background: white;
+    border-radius: 15px;
+    padding: 1.5rem;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    transition: all 0.5s ease; /* Más lento */
+}
+
+.chart-canvas-wrapper {
+    flex-grow: 1;
+    min-height: 200px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.5s ease; /* Más lento */
+}
+
+.quick-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    margin-top: 1.5rem;
+    transition: all 0.5s ease; /* Más lento */
+}
+
+.quick-action {
+    background: white;
+    border-radius: 10px;
+    padding: 1rem;
+    flex: 1 1 200px;
+    display: flex;
+    align-items: center;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+    transition: all 0.5s cubic-bezier(0.25, 0.8, 0.25, 1); /* Transición suave y lenta */
+}
+
+    .quick-action:hover {
+        transform: translateY(-5px) scale(1.02); /* Efecto más pronunciado */
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+        transition: all 0.5s cubic-bezier(0.25, 0.8, 0.25, 1);
+    }
+
+.action-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 1rem;
+    font-size: 1rem;
+    color: white;
+    transition: all 0.5s ease; /* Más lento */
+}
+
+.action-1 {
+    background-color: var(--primary-color);
+}
+
+.action-2 {
+    background-color: var(--secondary-color);
+}
+
+.action-3 {
+    background-color: var(--accent-color);
+}
+
+.action-4 {
+    background-color: var(--dark-color);
+}
+
+.action-text {
+    font-weight: 500;
+    transition: all 0.5s ease; /* Más lento */
+}
+
+#statCardsCarousel .carousel-item {
+    padding: 0 15px;
+    transition: all 0.5s ease; /* Más lento */
+}
+
+#statCardsCarousel .carousel-inner {
+    display: flex;
+    align-items: stretch;
+    transition: all 0.5s ease; /* Más lento */
+}
+
+#statCardsCarousel .carousel-item.active,
+#statCardsCarousel .carousel-item-next,
+#statCardsCarousel .carousel-item-prev {
+    display: flex;
+    transition: all 0.5s ease; /* Más lento */
+}
+
+#statCardsCarousel .carousel-item > div {
+    width: 100%;
+    transition: all 0.5s ease; /* Más lento */
+}
+
+@media (max-width: 992px) {
+    .chart-container {
+        margin-bottom: 1.5rem;
+        transition: all 0.5s ease; /* Más lento */
+    }
+}
+
+@media (max-width: 768px) {
+    .dashboard-header {
+        text-align: center;
+        transition: all 0.5s ease; /* Más lento */
+    }
+
+    .quick-actions {
+        flex-direction: column;
+        transition: all 0.5s ease; /* Más lento */
+    }
+
+    .quick-action {
+        flex: 1 1 auto;
+        transition: all 0.5s ease; /* Más lento */
+    }
+
+    #statCardsCarousel .carousel-item {
+        padding: 0 5px;
+        transition: all 0.5s ease; /* Más lento */
+    }
+}
