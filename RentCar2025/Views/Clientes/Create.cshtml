@@ -1,7 +1,7 @@
-﻿@model RentCar.Models.Cliente
+﻿@model RentCar.Models.Vehiculo
 
 @{
-    ViewData["Title"] = "Registrar Cliente";
+    ViewData["Title"] = "Registrar Vehículo";
     Layout = null;
 }
 
@@ -52,7 +52,7 @@
 
         .form_container {
             position: absolute;
-            max-width: 600px;
+            max-width: 800px;
             width: 90%;
             top: 50%;
             left: 50%;
@@ -96,6 +96,12 @@
             animation: fadeIn 0.3s ease 0.2s forwards;
         }
 
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px 30px;
+        }
+
         .input_container {
             position: relative;
             margin-top: 30px;
@@ -126,6 +132,14 @@
 
         .input_container:nth-child(6) {
             transition-delay: 0.55s;
+        }
+
+        .input_container:nth-child(7) {
+            transition-delay: 0.6s;
+        }
+
+        .input_container:nth-child(8) {
+            transition-delay: 0.65s;
         }
 
         .form_container.active .input_container {
@@ -202,7 +216,9 @@
             color: #0b0217;
             opacity: 0;
             transform: translateY(15px);
-            transition: all 0.3s ease 0.6s;
+            transition: all 0.3s ease 0.7s;
+            grid-column: 1 / -1;
+            justify-content: center;
         }
 
         .form_container.active .toggle_switch_container {
@@ -270,6 +286,7 @@
             margin-top: 40px;
             opacity: 0;
             transition: opacity 0.3s ease 0.8s;
+            grid-column: 1 / -1;
         }
 
         .form_container.active .action_buttons {
@@ -284,6 +301,8 @@
             transition: all 0.3s ease;
             text-align: center;
             display: inline-block;
+            border: none;
+            cursor: pointer;
         }
 
         .btn_submit {
@@ -313,6 +332,11 @@
             margin-top: 3px;
         }
 
+        .text-danger.full-span {
+            grid-column: 1 / -1;
+            margin-bottom: 10px;
+        }
+
         a {
             color: #7d2ae8;
             text-decoration: none;
@@ -332,64 +356,144 @@
                 opacity: 1;
             }
         }
+
+        @@media (max-width: 768px) {
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .form_container {
+                max-width: 95%;
+                padding: 25px;
+            }
+
+            .home {
+                padding: 10px;
+            }
+
+            .toggle_switch_container {
+                margin-top: 20px;
+            }
+
+            .action_buttons {
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            .btn_submit, .btn_back {
+                width: 100%;
+            }
+        }
+
+        @@media (max-width: 480px) {
+            .form_container h2 {
+                font-size: 20px;
+            }
+
+            .form_container {
+                padding: 20px;
+            }
+
+            .input_box input,
+            .input_box select {
+                font-size: 14px;
+            }
+
+            .input_label {
+                font-size: 13px;
+            }
+        }
     </style>
 </head>
 <body>
     <div class="home" id="home">
         <div class="form_container" id="formContainer">
             <span class="form_close" onclick="window.location.href='@Url.Action("Index")'">&times;</span>
-            <h2>Registrar Cliente</h2>
+            <h2>Registrar Vehículo</h2>
 
             <form asp-action="Create">
-                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <div asp-validation-summary="ModelOnly" class="text-danger full-span"></div>
 
-                <div class="input_container">
-                    <label class="input_label">Nombre completo del cliente</label>
-                    <div class="input_box">
-                        <input asp-for="Nombre" placeholder="Ingrese el nombre completo" type="text" />
-                        <i class="bi bi-person"></i>
+                <div class="form-grid">
+                    <div class="input_container">
+                        <label class="input_label">Descripción del vehículo</label>
+                        <div class="input_box">
+                            <input asp-for="Descripcion" placeholder="Descripción del vehículo" type="text" />
+                            <i class="bi bi-car-front"></i>
+                        </div>
+                        <span asp-validation-for="Descripcion" class="text-danger"></span>
                     </div>
-                    <span asp-validation-for="Nombre" class="text-danger"></span>
-                </div>
 
-                <div class="input_container">
-                    <label class="input_label">Número de cédula</label>
-                    <div class="input_box">
-                        <input asp-for="Cedula" placeholder="Ej: 000-0000000-0" type="tel" />
-                        <i class="bi bi-credit-card"></i>
+                    <div class="input_container">
+                        <label class="input_label">Número de Chasis</label>
+                        <div class="input_box">
+                            <input asp-for="NoChasis" placeholder="Número de Chasis" type="text" />
+                            <i class="bi bi-upc-scan"></i>
+                        </div>
+                        <span asp-validation-for="NoChasis" class="text-danger"></span>
                     </div>
-                    <span asp-validation-for="Cedula" class="text-danger"></span>
-                </div>
 
-                <div class="input_container">
-                    <label class="input_label">Número de tarjeta de crédito</label>
-                    <div class="input_box">
-                        <input asp-for="NoTarjetaCR" placeholder="Ej: XXXX-XXXX-XXXX-XXXX" type="text" />
-                        <i class="bi bi-credit-card-2-front"></i>
+                    <div class="input_container">
+                        <label class="input_label">Número de Motor</label>
+                        <div class="input_box">
+                            <input asp-for="NoMotor" placeholder="Número de Motor" type="text" />
+                            <i class="bi bi-gear"></i>
+                        </div>
+                        <span asp-validation-for="NoMotor" class="text-danger"></span>
                     </div>
-                    <span asp-validation-for="NoTarjetaCR" class="text-danger"></span>
-                </div>
 
-                <div class="input_container">
-                    <label class="input_label">Límite de crédito</label>
-                    <div class="input_box">
-                        <input asp-for="LimiteCredito" placeholder="Ingrese el límite de crédito" type="number" step="0.01" min="0" />
-                        <i class="bi bi-cash-coin"></i>
+                    <div class="input_container">
+                        <label class="input_label">Número de Placa</label>
+                        <div class="input_box">
+                            <input asp-for="NoPlaca" placeholder="Número de Placa" type="text" />
+                            <i class="bi bi-123"></i>
+                        </div>
+                        <span asp-validation-for="NoPlaca" class="text-danger"></span>
                     </div>
-                    <span asp-validation-for="LimiteCredito" class="text-danger"></span>
-                </div>
 
-                <div class="input_container">
-                    <label class="input_label">Tipo de persona</label>
-                    <div class="input_box">
-                        <select asp-for="TipoPersona">
-                            <option value="">Seleccione el tipo de persona</option>
-                            <option value="Fisica">Física</option>
-                            <option value="Juridica">Jurídica</option>
-                        </select>
-                        <i class="bi bi-person-badge"></i>
+                    <div class="input_container">
+                        <label class="input_label">Tipo de Vehículo</label>
+                        <div class="input_box select_box">
+                            <select asp-for="TipoVehiculoId" asp-items="ViewBag.TipoVehiculoId">
+                                <option value="">Seleccione Tipo de Vehículo</option>
+                            </select>
+                            <i class="bi bi-truck"></i>
+                        </div>
+                        <span asp-validation-for="TipoVehiculoId" class="text-danger"></span>
                     </div>
-                    <span asp-validation-for="TipoPersona" class="text-danger"></span>
+
+                    <div class="input_container">
+                        <label class="input_label">Marca</label>
+                        <div class="input_box select_box">
+                            <select asp-for="MarcaId" asp-items="ViewBag.MarcaId" id="marcaDropdown">
+                                <option value="">Seleccione Marca</option>
+                            </select>
+                            <i class="bi bi-tag"></i>
+                        </div>
+                        <span asp-validation-for="MarcaId" class="text-danger"></span>
+                    </div>
+
+                    <div class="input_container">
+                        <label class="input_label">Modelo</label>
+                        <div class="input_box select_box">
+                            <select asp-for="ModeloId" asp-items="ViewBag.ModeloId" id="modeloDropdown">
+                                <option value="">Seleccione Modelo</option>
+                            </select>
+                            <i class="bi bi-box-seam"></i>
+                        </div>
+                        <span asp-validation-for="ModeloId" class="text-danger"></span>
+                    </div>
+
+                    <div class="input_container">
+                        <label class="input_label">Tipo de Combustible</label>
+                        <div class="input_box select_box">
+                            <select asp-for="TipoCombustibleId" asp-items="ViewBag.TipoCombustibleId">
+                                <option value="">Seleccione Tipo de Combustible</option>
+                            </select>
+                            <i class="bi bi-fuel-pump"></i>
+                        </div>
+                        <span asp-validation-for="TipoCombustibleId" class="text-danger"></span>
+                    </div>
                 </div>
 
                 <div class="toggle_switch_container">
@@ -397,12 +501,12 @@
                         <input asp-for="Estado" type="checkbox" id="estadoToggle" checked="@Model?.Estado" />
                         <span class="slider round"></span>
                     </label>
-                    <label for="estadoToggle" class="toggle_label">Estado activo del cliente</label>
+                    <label for="estadoToggle" class="toggle_label">Activo</label>
                 </div>
 
                 <div class="action_buttons">
                     <button type="submit" class="btn_submit">
-                        <i class="bi bi-person-plus"></i> Registrar Cliente
+                        <i class="bi bi-floppy"></i> Registrar Vehículo
                     </button>
                     <a asp-action="Index" class="btn_back">
                         <i class="bi bi-arrow-left"></i> Volver a la lista
@@ -412,6 +516,7 @@
         </div>
     </div>
 
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const home = document.getElementById('home');
@@ -421,6 +526,41 @@
                 home.classList.add('active');
                 formContainer.classList.add('active');
             }, 50);
+
+            const marcaDropdown = $('#marcaDropdown');
+            const modeloDropdown = $('#modeloDropdown');
+
+            if (!marcaDropdown.val()) {
+                modeloDropdown.prop('disabled', true).empty().append('<option value="">Seleccione Marca Primero</option>');
+            }
+
+            marcaDropdown.change(function () {
+                const selectedMarcaId = $(this).val();
+                if (selectedMarcaId) {
+                    modeloDropdown.prop('disabled', false).empty().append('<option value="">Cargando Modelos...</option>');
+                    $.ajax({
+                        url: '@Url.Action("GetModelosByMarca", "Vehiculos")',
+                        type: 'GET',
+                        data: { marcaId: selectedMarcaId },
+                        success: function (data) {
+                            modeloDropdown.empty().append('<option value="">Seleccione Modelo</option>');
+                            $.each(data, function (i, modelo) {
+                                modeloDropdown.append($('<option></option>').val(modelo.value).html(modelo.text));
+                            });
+                        },
+                        error: function () {
+                            modeloDropdown.empty().append('<option value="">Error al cargar modelos</option>');
+                            console.error('Error loading models for selected brand.');
+                        }
+                    });
+                } else {
+                    modeloDropdown.empty().append('<option value="">Seleccione Marca Primero</option>').prop('disabled', true);
+                }
+            });
+
+            if (marcaDropdown.val()) {
+                marcaDropdown.trigger('change');
+            }
         });
     </script>
 

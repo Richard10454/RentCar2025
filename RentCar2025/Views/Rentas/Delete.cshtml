@@ -43,7 +43,7 @@
                 background-color: rgba(0, 0, 0, 0.6);
                 z-index: 100;
                 opacity: 0;
-                transition: opacity 0.3s ease; 
+                transition: opacity 0.3s ease;
             }
 
             .home.active::before {
@@ -56,14 +56,14 @@
             width: 90%;
             top: 50%;
             left: 50%;
-            transform: translate(-50%, -50%) scale(0.9); 
+            transform: translate(-50%, -50%) scale(0.9);
             z-index: 101;
             background: #fff;
             padding: 40px;
             border-radius: 16px;
             box-shadow: 0 5px 25px rgba(0, 0, 0, 0.35);
             opacity: 0;
-            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); 
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
 
             .delete_container.active {
@@ -93,7 +93,7 @@
             text-align: center;
             margin-bottom: 15px;
             opacity: 0;
-            animation: fadeIn 0.3s ease 0.2s forwards; 
+            animation: fadeIn 0.3s ease 0.2s forwards;
         }
 
         .delete_container h3 {
@@ -103,7 +103,7 @@
             margin-bottom: 30px;
             font-weight: 500;
             opacity: 0;
-            animation: fadeIn 0.3s ease 0.25s forwards; 
+            animation: fadeIn 0.3s ease 0.25s forwards;
         }
 
         .details_list {
@@ -120,7 +120,7 @@
             padding-right: 15px;
             opacity: 0;
             transform: translateX(-20px);
-            transition: all 0.3s ease; 
+            transition: all 0.3s ease;
         }
 
         .detail_value {
@@ -222,7 +222,7 @@
             margin-top: 40px;
             text-align: center;
             opacity: 0;
-            transition: opacity 0.3s ease 1.2s; 
+            transition: opacity 0.3s ease 1.2s;
         }
 
         .delete_container.active .delete_form {
@@ -278,7 +278,7 @@
             color: #e74c3c;
             margin-bottom: 20px;
             opacity: 0;
-            animation: fadeIn 0.3s ease 0.2s forwards; 
+            animation: fadeIn 0.3s ease 0.2s forwards;
         }
 
         @@keyframes fadeIn {
@@ -324,11 +324,14 @@
                 <div class="detail_label">@Html.DisplayNameFor(model => model.Cliente)</div>
                 <div class="detail_value">@Html.DisplayFor(model => model.Cliente.Nombre)</div>
 
+                <div class="detail_label">@Html.DisplayNameFor(model => model.Inspeccion)</div>
+                <div class="detail_value">@(Model.Inspeccion?.Id.ToString() ?? "N/A")</div>
+
                 <div class="detail_label">@Html.DisplayNameFor(model => model.FechaRenta)</div>
                 <div class="detail_value">@Html.DisplayFor(model => model.FechaRenta)</div>
 
                 <div class="detail_label">@Html.DisplayNameFor(model => model.FechaDevolucion)</div>
-                <div class="detail_value">@Html.DisplayFor(model => model.FechaDevolucion)</div>
+                <div class="detail_value">@(Model.FechaDevolucion.HasValue ? Model.FechaDevolucion.Value.ToString("dd/MM/yyyy") : "N/A")</div>
 
                 <div class="detail_label">@Html.DisplayNameFor(model => model.MontoPorDia)</div>
                 <div class="detail_value">@Html.DisplayFor(model => model.MontoPorDia)</div>
@@ -343,8 +346,6 @@
                 <div class="detail_value @(Model.Estado ? "status_active" : "status_inactive")">
                     @(Model.Estado ? "Activo" : "Inactivo")
                 </div>
-
-
             </div>
 
             <form asp-action="Delete" class="delete_form">

@@ -514,7 +514,17 @@
                         </div>
                         <span asp-validation-for="ClienteId" class="text-danger"></span>
                     </div>
-
+                    
+                    <div class="input_container">
+                        <label class="input_label">Inspección</label>
+                        <div class="input_box">
+                            <select asp-for="InspeccionId" asp-items="ViewBag.InspeccionId">
+                                <option value="">Seleccione inspección</option>
+                            </select>
+                            <i class="bi bi-card-checklist"></i>
+                        </div>
+                        <span asp-validation-for="InspeccionId" class="text-danger"></span>
+                    </div>
                     <div class="input_container">
                         <label class="input_label">Fecha de Renta</label>
                         <div class="input_box">
@@ -551,8 +561,6 @@
                         <span asp-validation-for="CantidadDias" class="text-danger"></span>
                     </div>
                     
-                 
-
                     <div class="input_container">
                         <label class="input_label">Comentario</label>
                         <div class="input_box">

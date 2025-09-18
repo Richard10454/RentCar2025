@@ -21,5 +21,7 @@
         public Empleado? Empleado { get; set; }
         public bool Estado { get; set; }
 
+
+
     }
 }
