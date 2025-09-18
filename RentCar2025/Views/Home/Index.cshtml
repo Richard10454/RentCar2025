@@ -10,7 +10,209 @@
 <link href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" rel="stylesheet">
 <link rel="stylesheet" href="~/css/Index.css" />
 
+<style>
+    /* 07-09-2025 */
+    .notification-system {
+        position: fixed;
+        top: 80px;
+        right: 20px;
+        z-index: 1100;
+        max-width: 380px;
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+    }
 
+    .notification {
+        position: relative;
+        padding: 18px 25px;
+        border-radius: 14px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12);
+        display: flex;
+        align-items: flex-start;
+        overflow: hidden;
+        transform: translateX(120%);
+        opacity: 0;
+        animation: slideInRight 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+        transition: all 0.4s ease;
+        border-left: 5px solid;
+        background: white;
+    }
+
+    .notification.success {
+        border-left-color: #2ecc71;
+        background: linear-gradient(135deg, #f0fff4, #ffffff);
+    }
+
+    .notification.error {
+        border-left-color: #e74c3c;
+        background: linear-gradient(135deg, #fff5f5, #ffffff);
+    }
+
+    .notification.warning {
+        border-left-color: #f39c12;
+        background: linear-gradient(135deg, #fffaf0, #ffffff);
+    }
+
+    .notification.info {
+        border-left-color: #3498db;
+        background: linear-gradient(135deg, #f0f9ff, #ffffff);
+    }
+
+    .notification-icon {
+        font-size: 24px;
+        margin-right: 15px;
+        flex-shrink: 0;
+        margin-top: 2px;
+    }
+
+    .success .notification-icon {
+        color: #2ecc71;
+    }
+
+    .error .notification-icon {
+        color: #e74c3c;
+    }
+
+    .warning .notification-icon {
+        color: #f39c12;
+    }
+
+    .info .notification-icon {
+        color: #3498db;
+    }
+
+    .notification-content {
+        flex-grow: 1;
+    }
+
+    .notification-title {
+        font-weight: 600;
+        margin-bottom: 5px;
+        font-size: 16px;
+        color: #2d3748;
+    }
+
+    .success .notification-title {
+        color: #22543d;
+    }
+
+    .error .notification-title {
+        color: #742a2a;
+    }
+
+    .warning .notification-title {
+        color: #744210;
+    }
+
+    .info .notification-title {
+        color: #1a365d;
+    }
+
+    .notification-message {
+        font-size: 14px;
+        line-height: 1.5;
+        color: #4a5568;
+    }
+
+    .notification-close {
+        margin-left: 15px;
+        cursor: pointer;
+        font-size: 18px;
+        opacity: 0.5;
+        transition: all 0.3s ease;
+        flex-shrink: 0;
+        padding: 5px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 28px;
+        height: 28px;
+    }
+
+    .notification-close:hover {
+        opacity: 1;
+        background-color: rgba(0, 0, 0, 0.05);
+        transform: rotate(90deg);
+    }
+
+    .notification-progress {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        height: 3px;
+        width: 100%;
+        transform-origin: left;
+    }
+
+    .success .notification-progress {
+        background: linear-gradient(90deg, #2ecc71, #48bb78);
+    }
+
+    .error .notification-progress {
+        background: linear-gradient(90deg, #e74c3c, #f56565);
+    }
+
+    .warning .notification-progress {
+        background: linear-gradient(90deg, #f39c12, #ed8936);
+    }
+
+    .info .notification-progress {
+        background: linear-gradient(90deg, #3498db, #4299e1);
+    }
+
+    @@keyframes slideInRight {
+        to {
+            transform: translateX(0);
+            opacity: 1;
+        }
+    }
+
+    @@keyframes progressBar {
+        from {
+            transform: scaleX(1);
+        }
+
+        to {
+            transform: scaleX(0);
+        }
+    }
+
+    .notification.hide {
+        animation: slideOutRight 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+    }
+
+    @@keyframes slideOutRight {
+        from {
+            transform: translateX(0);
+            opacity: 1;
+        }
+
+        to {
+            transform: translateX(120%);
+            opacity: 0;
+        }
+    }
+
+    .notification:hover {
+        transform: translateX(0) scale(1.02);
+        box-shadow: 0 12px 35px rgba(0, 0, 0, 0.15);
+    }
+
+    @@media (max-width: 768px) {
+        .notification-system {
+            top: 10px;
+            right: 10px;
+            max-width: calc(100% - 20px);
+        }
+
+        .notification {
+            padding: 15px 20px;
+        }
+    }
+</style>
 
 
 <div class="container-fluid py-4">
@@ -19,6 +221,33 @@
         <p class="lead">Gestión integral de vehículos y flota automotriz</p>
     </div>
 
+    <div class="notification-system">
+        @if (TempData["SuccessMessage"] != null)
+        {
+            <div class="notification success" id="successNotification">
+                <i class="bi bi-check-circle-fill notification-icon"></i>
+                <div class="notification-content">
+                    <div class="notification-title">Operación Exitosa</div>
+                    <div class="notification-message">@TempData["SuccessMessage"]</div>
+                </div>
+                <div class="notification-close" onclick="dismissNotification(this.parentElement)">&times;</div>
+                <div class="notification-progress" style="animation: progressBar 5s linear forwards;"></div>
+            </div>
+        }
+
+        @if (TempData["ErrorMessage"] != null)
+        {
+            <div class="notification error" id="errorNotification">
+                <i class="bi bi-exclamation-triangle-fill notification-icon"></i>
+                <div class="notification-content">
+                    <div class="notification-title">Error</div>
+                    <div class="notification-message">@TempData["ErrorMessage"]</div>
+                </div>
+                <div class="notification-close" onclick="dismissNotification(this.parentElement)">&times;</div>
+                <div class="notification-progress" style="animation: progressBar 5s linear forwards;"></div>
+            </div>
+        }
+    </div>
 
     <div id="statCardsCarousel" class="carousel slide" data-bs-ride="carousel" data-bs-interval="7000">
         <div class="carousel-inner">
@@ -308,70 +537,16 @@
 @section Scripts {
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
-        document.addEventListener('DOMContentLoaded', function () {
-        
-            const vehicleTypesData = {
-                labels: ['Sedán', 'SUV', 'Pickup', 'Hatchback', 'Deportivos'],
-                datasets: [{
-                    data: [35, 25, 20, 15, 5], 
-                    backgroundColor: [
-                        '#6C4DFF', 
-                        '#FF7D4D', 
-                        '#4DFF9E', 
-                        '#2A2D3E', 
-                        '#FFC94D'  
-                    ],
-                    borderWidth: 0
-                }]
-            };
+        function dismissNotification(notification) {
+            notification.classList.add('hide');
+            setTimeout(() => {
+                notification.remove();
+            }, 600);
+        }
 
-            const brandsData = {
-                labels: ['Toyota', 'Honda', 'Nissan', 'Ford', 'Chevrolet'],
-                datasets: [{
-                    label: 'Número de Vehículos',
-                    data: [15, 10, 8, 7, 5], 
-                    backgroundColor: [
-                        'rgba(108, 77, 255, 0.7)',
-                        'rgba(255, 125, 77, 0.7)',
-                        'rgba(77, 255, 158, 0.7)',
-                        'rgba(42, 45, 62, 0.7)',
-                        'rgba(255, 201, 77, 0.7)'
-                    ],
-                    borderColor: [
-                        '#6C4DFF',
-                        '#FF7D4D',
-                        '#4DFF9E',
-                        '#2A2D3E',
-                        '#FFC94D'
-                    ],
-                    borderWidth: 1
-                }]
-            };
-
-            const modelsData = {
-                labels: ['Corolla', 'CR-V', 'Frontier', 'F-150', 'Camaro'],
-                datasets: [{
-                    label: 'Cantidad',
-                    data: [10, 8, 6, 5, 3], 
-                    backgroundColor: [
-                        'rgba(108, 77, 255, 0.8)',
-                        'rgba(255, 125, 77, 0.8)',
-                        'rgba(77, 255, 158, 0.8)',
-                        'rgba(42, 45, 62, 0.8)',
-                        'rgba(255, 201, 77, 0.8)'
-                    ],
-                    borderColor: [
-                        '#6C4DFF',
-                        '#FF7D4D',
-                        '#4DFF9E',
-                        '#2A2D3E',
-                        '#FFC94D'
-                    ],
-                    borderWidth: 1
-                }]
-            };
-
-       
+        // --- New Function to Fetch and Render Charts ---
+        function fetchAndRenderCharts() {
+            // General chart options
             const chartOptions = {
                 responsive: true,
                 maintainAspectRatio: false,
@@ -391,77 +566,163 @@
                 }
             };
 
-        
-            new Chart(document.getElementById('vehicleTypesChart').getContext('2d'), {
-                type: 'doughnut',
-                data: vehicleTypesData,
-                options: {
-                    ...chartOptions,
-                    cutout: '70%'
-                }
-            });
+            const primaryColors = ['#6C4DFF', '#FF7D4D', '#4DFF9E', '#2A2D3E', '#FFC94D', '#8A2BE2', '#00FFFF', '#7FFF00', '#D2691E', '#FF7F50'];
+            const primaryBackgrounds = primaryColors.map(color => `${color}B3`);
+            const primaryBorders = primaryColors;
 
-  
-            new Chart(document.getElementById('brandsChart').getContext('2d'), {
-                type: 'bar',
-                data: brandsData,
-                options: {
-                    ...chartOptions,
-                    indexAxis: 'y', 
-                    scales: {
-                        x: {
-                            beginAtZero: true,
-                            grid: {
-                                display: false
-                            }
-                        },
-                        y: {
-                            grid: {
-                                display: false
-                            }
-                        }
-                    },
-                    plugins: {
-                        ...chartOptions.plugins,
-                        legend: {
-                            display: false 
-                        }
+            // Fetch data from the new endpoint
+            fetch('@Url.Action("GetDashboardChartData", "Home")', { cache: "no-cache" })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
                     }
-                }
-            });
+                    return response.json();
+                })
+                .then(data => {
+                    // Prepare data for the charts
+                    const tiposVehiculoLabels = data.tiposVehiculo.map(item => item.tipo);
+                    const tiposVehiculoCounts = data.tiposVehiculo.map(item => item.count);
+                    const marcasLabels = data.marcas.map(item => item.marca);
+                    const marcasCounts = data.marcas.map(item => item.count);
+                    const modelosLabels = data.modelos.map(item => item.modelo);
+                    const modelosCounts = data.modelos.map(item => item.count);
 
-         
-            new Chart(document.getElementById('modelsChart').getContext('2d'), {
-                type: 'bar',
-                data: modelsData,
-                options: {
-                    ...chartOptions,
-                    scales: {
-                        x: {
-                            beginAtZero: true,
-                            grid: {
-                                display: false
-                            }
-                        },
-                        y: {
-                            grid: {
-                                display: false
-                            }
-                        }
-                    },
-                    plugins: {
-                        ...chartOptions.plugins,
-                        legend: {
-                            display: false 
-                        }
+                    // --- Render Vehicle Types Chart (Doughnut) ---
+                    const vehicleTypesCtx = document.getElementById('vehicleTypesChart').getContext('2d');
+                    if (window.vehicleTypesChartInstance) {
+                        window.vehicleTypesChartInstance.destroy(); // Destroy previous instance to prevent duplicates
                     }
-                }
-            });
+                    window.vehicleTypesChartInstance = new Chart(vehicleTypesCtx, {
+                        type: 'doughnut',
+                        data: {
+                            labels: tiposVehiculoLabels,
+                            datasets: [{
+                                data: tiposVehiculoCounts,
+                                backgroundColor: primaryColors,
+                                borderWidth: 0
+                            }]
+                        },
+                        options: {
+                            ...chartOptions,
+                            cutout: '70%',
+                            plugins: {
+                                ...chartOptions.plugins,
+                                legend: {
+                                    position: 'bottom', // Improved position for smaller screens
+                                    labels: {
+                                        boxWidth: 12,
+                                        padding: 20,
+                                        usePointStyle: true,
+                                        pointStyle: 'circle'
+                                    }
+                                }
+                            }
+                        }
+                    });
 
+                    // --- Render Brands Chart (Bar) ---
+                    const brandsCtx = document.getElementById('brandsChart').getContext('2d');
+                    if (window.brandsChartInstance) {
+                        window.brandsChartInstance.destroy(); // Destroy previous instance
+                    }
+                    window.brandsChartInstance = new Chart(brandsCtx, {
+                        type: 'bar',
+                        data: {
+                            labels: marcasLabels,
+                            datasets: [{
+                                label: 'Número de Vehículos',
+                                data: marcasCounts,
+                                backgroundColor: primaryBackgrounds,
+                                borderColor: primaryBorders,
+                                borderWidth: 1
+                            }]
+                        },
+                        options: {
+                            ...chartOptions,
+                            indexAxis: 'y', // Horizontal bar chart
+                            scales: {
+                                x: {
+                                    beginAtZero: true,
+                                    grid: { display: false }
+                                },
+                                y: {
+                                    grid: { display: false }
+                                }
+                            },
+                            plugins: {
+                                ...chartOptions.plugins,
+                                legend: { display: false } // Hide legend for bar chart
+                            }
+                        }
+                    });
 
+                    // --- Render Models Chart (Bar) ---
+                    const modelsCtx = document.getElementById('modelsChart').getContext('2d');
+                    if (window.modelsChartInstance) {
+                        window.modelsChartInstance.destroy(); // Destroy previous instance
+                    }
+                    window.modelsChartInstance = new Chart(modelsCtx, {
+                        type: 'bar',
+                        data: {
+                            labels: modelosLabels,
+                            datasets: [{
+                                label: 'Cantidad',
+                                data: modelosCounts,
+                                backgroundColor: primaryBackgrounds,
+                                borderColor: primaryBorders,
+                                borderWidth: 1
+                            }]
+                        },
+                        options: {
+                            ...chartOptions,
+                            scales: {
+                                x: {
+                                    beginAtZero: true,
+                                    grid: { display: false }
+                                },
+                                y: {
+                                    grid: { display: false }
+                                }
+                            },
+                            plugins: {
+                                ...chartOptions.plugins,
+                                legend: { display: false }
+                            }
+                        }
+                    });
+
+                })
+                .catch(error => {
+                    console.error('Error fetching dashboard chart data:', error);
+                });
+        }
+        // --- End of new function ---
+
+        document.addEventListener('DOMContentLoaded', function () {
+            // Call the function when the page loads
+            fetchAndRenderCharts();
+            
+            // Existing JavaScript for animations and notifications
             const animateElements = document.querySelectorAll('.animate__animated');
             animateElements.forEach((el, index) => {
-                el.style.animationDelay = `${index * 0.05}s`; 
+                el.style.animationDelay = `${index * 0.05}s`;
+            });
+
+            const notifications = document.querySelectorAll('.notification');
+            notifications.forEach(notification => {
+                setTimeout(() => {
+                    dismissNotification(notification);
+                }, 5000);
+            });
+
+            notifications.forEach(notification => {
+                const progressBar = notification.querySelector('.notification-progress');
+                notification.addEventListener('mouseenter', () => {
+                    progressBar.style.animationPlayState = 'paused';
+                });
+                notification.addEventListener('mouseleave', () => {
+                    progressBar.style.animationPlayState = 'running';
+                });
             });
         });
     </script>

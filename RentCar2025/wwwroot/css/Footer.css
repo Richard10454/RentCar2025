@@ -1,0 +1,144 @@
+﻿/* General Footer Styling */
+.footer {
+    background-color: #212529 !important; /* Dark background for a sleek look */
+    color: #f8f9fa; /* Light text color */
+    padding: 3rem 0; /* More vertical padding */
+    font-family: 'Inter', sans-serif; /* Consistent font */
+}
+
+.footer-heading {
+    color: #ffffff; /* White color for headings */
+    font-weight: 700;
+    margin-bottom: 1.5rem;
+    position: relative;
+    padding-bottom: 0.5rem; /* Space for the underline effect */
+    letter-spacing: 0.05em; /* Slightly increased letter spacing for headings */
+    text-transform: uppercase; /* Ensure consistent uppercase for headings */
+    font-size: 1.15rem; /* Slightly larger font size for headings */
+}
+
+    /* Underline effect for footer headings */
+    .footer-heading::after {
+        content: '';
+        position: absolute;
+        left: 0;
+        bottom: 0;
+        width: 60px; /* Slightly longer underline */
+        height: 3px;
+        background-color: #007bff; /* Primary color for highlight */
+        border-radius: 2px;
+    }
+
+/* Adjust underline position for right-aligned headings */
+.col-md-4:last-child .footer-heading::after {
+    left: auto;
+    right: 0;
+}
+
+/* Footer Links Styling */
+.footer-links {
+    padding-left: 0;
+    list-style: none;
+}
+
+    .footer-links li {
+        margin-bottom: 0.75rem;
+    }
+
+    .footer-links a {
+        color: rgba(255, 255, 255, 0.75); /* Slightly brighter white for links */
+        text-decoration: none;
+        transition: color 0.3s ease-in-out, transform 0.3s ease-in-out;
+        display: inline-block;
+        font-size: 0.95rem; /* Standard font size for readability */
+        line-height: 1.5; /* Improve line spacing */
+    }
+
+        .footer-links a:hover {
+            color: #007bff; /* Primary color on hover */
+            transform: translateX(5px); /* Slight slide effect on hover */
+        }
+
+/* Footer Contact Info Styling */
+.footer-contact {
+    padding-left: 0;
+    list-style: none;
+    color: rgba(255, 255, 255, 0.75); /* Consistent text color */
+    font-size: 0.95rem; /* Consistent font size */
+    line-height: 1.8; /* More line spacing for contact info */
+}
+
+    .footer-contact li {
+        margin-bottom: 0.75rem;
+        display: flex; /* For icon and text alignment */
+        align-items: flex-start; /* Align items to the top (useful for multi-line text) */
+        justify-content: center; /* Center for mobile */
+    }
+
+@media (min-width: 768px) {
+    .footer-contact li {
+        justify-content: flex-end; /* Align right on desktop */
+    }
+}
+
+.footer-contact i {
+    color: #007bff; /* Primary color for icons */
+    font-size: 1.1em;
+    margin-right: 0.75rem; /* More space between icon and text */
+    flex-shrink: 0; /* Prevent icon from shrinking */
+    padding-top: 0.1em; /* Adjust icon vertical alignment */
+}
+
+/* Social Icons Styling */
+.social-icons {
+    display: flex;
+    justify-content: center; /* Center for mobile */
+    gap: 18px; /* Slightly more space between icons */
+}
+
+@media (min-width: 768px) {
+    .social-icons {
+        justify-content: flex-start; /* Align left on desktop */
+    }
+}
+
+.social-icon {
+    color: rgba(255, 255, 255, 0.8); /* Slightly brighter for better visibility */
+    font-size: 1.6rem; /* Slightly larger social icons */
+    transition: color 0.3s ease-in-out, transform 0.3s ease-in-out;
+}
+
+    .social-icon:hover {
+        color: #007bff; /* Primary color on hover */
+        transform: translateY(-4px); /* More noticeable lift effect */
+    }
+
+/* Footer Divider */
+.footer-divider {
+    border-top: 1px solid rgba(255, 255, 255, 0.15); /* Slightly more visible divider */
+    margin-top: 2.5rem; /* More space above divider */
+    margin-bottom: 1.5rem; /* More space below divider */
+}
+
+/* Bottom text */
+.footer-bottom-text {
+    color: rgba(255, 255, 255, 0.6); /* Slightly brighter for copyright */
+    font-size: 0.9rem; /* Slightly larger font size for copyright */
+}
+
+/* Responsive Adjustments */
+@media (max-width: 767.98px) {
+    .footer .row > div {
+        text-align: center !important; /* Ensure all columns are centered on mobile */
+    }
+
+    /* Adjust underline position for centered headings on mobile */
+    .footer-heading::after {
+        left: 50%;
+        transform: translateX(-50%);
+    }
+
+    .footer-contact li {
+        justify-content: center; /* Ensure icons and text are centered on small screens */
+    }
+}

@@ -1,5 +1,4 @@
-﻿@model IEnumerable<RentCar.Models.Cliente>
-
+﻿@model List<RentCar.Models.Cliente>
 @{
     ViewData["Title"] = "Clientes";
     Layout = "_Layout";
@@ -7,6 +6,7 @@
 
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
 <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css" rel="stylesheet" />
+<link href="~/css/paginacion.css" rel="stylesheet" />
 
 <style>
     :root {
@@ -53,12 +53,12 @@
         gap: 15px;
     }
 
-        .table-header h2 {
-            font-size: 26px;
-            font-weight: 600;
-            color: var(--text-color);
-            margin: 0;
-        }
+    .table-header h2 {
+        font-size: 26px;
+        font-weight: 600;
+        color: var(--text-color);
+        margin: 0;
+    }
 
     .btn-purple {
         background-color: var(--primary-color);
@@ -74,11 +74,73 @@
         gap: 8px;
     }
 
-        .btn-purple:hover {
-            background-color: var(--hover-color);
-            transform: translateY(-2px);
-            box-shadow: 0 4px 8px rgba(92, 77, 255, 0.2);
-        }
+    .btn-purple:hover {
+        background-color: var(--hover-color);
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(92, 77, 255, 0.2);
+    }
+
+    .dropdown-container {
+        position: relative;
+        display: inline-block;
+    }
+
+    .btn-report {
+        background-color: #28a745; 
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 20px;
+        text-decoration: none;
+        font-weight: 500;
+        transition: all 0.3s ease;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        cursor: pointer;
+    }
+
+    .btn-report:hover {
+        background-color: #218838; 
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(40, 167, 69, 0.2);
+    }
+
+    .dropdown-menu {
+        display: none;
+        position: absolute;
+        top: 100%;
+        left: 0;
+        background-color: white;
+        min-width: 160px;
+        box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+        z-index: 1;
+        border-radius: 8px;
+        padding: 8px 0;
+        margin-top: 5px;
+    }
+
+    .dropdown-menu a {
+        color: #333;
+        padding: 12px 16px;
+        text-decoration: none;
+        display: block;
+        font-weight: 500;
+        transition: background-color 0.3s ease;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .dropdown-menu a:hover {
+        background-color: #f1f1f1;
+    }
+
+    .dropdown-container:hover .dropdown-menu,
+    .dropdown-container.show .dropdown-menu {
+        display: block;
+    }
+
 
     .input-search {
         position: relative;
@@ -87,36 +149,36 @@
         min-width: 200px;
     }
 
-        .input-search input {
-            border: 1px solid #ddd;
-            border-radius: 20px;
-            padding: 10px 40px 10px 15px;
-            outline: none;
-            width: 100%;
-            transition: all 0.3s ease;
-            font-family: 'Poppins', sans-serif;
-        }
+    .input-search input {
+        border: 1px solid #ddd;
+        border-radius: 20px;
+        padding: 10px 40px 10px 15px;
+        outline: none;
+        width: 100%;
+        transition: all 0.3s ease;
+        font-family: 'Poppins', sans-serif;
+    }
 
-            .input-search input:focus {
-                border-color: var(--primary-color);
-                box-shadow: 0 0 0 2px rgba(108, 77, 255, 0.2);
-            }
+    .input-search input:focus {
+        border-color: var(--primary-color);
+        box-shadow: 0 0 0 2px rgba(108, 77, 255, 0.2);
+    }
 
-        .input-search button {
-            background: none;
-            border: none;
-            position: absolute;
-            right: 12px;
-            top: 50%;
-            transform: translateY(-50%);
-            color: #aaa;
-            cursor: pointer;
-            transition: color 0.3s ease;
-        }
+    .input-search button {
+        background: none;
+        border: none;
+        position: absolute;
+        right: 12px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: #aaa;
+        cursor: pointer;
+        transition: color 0.3s ease;
+    }
 
-        .input-search input:focus + button i {
-            color: var(--primary-color);
-        }
+    .input-search input:focus + button i {
+        color: var(--primary-color);
+    }
 
     .styled-table {
         width: 100%;
@@ -126,29 +188,29 @@
         margin: 20px 0;
     }
 
-        .styled-table thead {
-            background-color: var(--header-bg);
-            color: var(--text-color);
-        }
+    .styled-table thead {
+        background-color: var(--header-bg);
+        color: var(--text-color);
+    }
 
-            .styled-table thead th {
-                padding: 15px;
-                text-align: left;
-                font-size: 14px;
-                font-weight: 600;
-                position: relative;
-                transition: background-color 0.3s ease;
-            }
+    .styled-table thead th {
+        padding: 15px;
+        text-align: left;
+        font-size: 14px;
+        font-weight: 600;
+        position: relative;
+        transition: background-color 0.3s ease;
+    }
 
-                .styled-table thead th:hover {
-                    background-color: #ffe878;
-                }
+    .styled-table thead th:hover {
+        background-color: #ffe878;
+    }
 
-        .styled-table tbody tr {
-            opacity: 0;
-            transform: translateX(-10px);
-            animation: fadeInRow 0.4s ease-out forwards;
-        }
+    .styled-table tbody tr {
+        opacity: 0;
+        transform: translateX(-10px);
+        animation: fadeInRow 0.4s ease-out forwards;
+    }
 
     @@keyframes fadeInRow {
         to {
@@ -192,9 +254,9 @@
         background-color: var(--row-hover);
     }
 
-        .styled-table tbody tr:hover td {
-            background-color: var(--row-hover);
-        }
+    .styled-table tbody tr:hover td {
+        background-color: var(--row-hover);
+    }
 
     .operations-cell {
         display: flex;
@@ -250,7 +312,6 @@
         color: #c62828;
     }
 
-    /* Nuevos estilos para la alerta */
     .alert-container {
         position: fixed;
         top: 70px;
@@ -279,6 +340,12 @@
         color: #0f5132;
         background: linear-gradient(135deg, #d4edda, #c3e6cb);
         border-left: 5px solid #0f5132;
+    }
+
+    .alert-danger {
+        color: #58151c; 
+        background: linear-gradient(135deg, #f8d7da, #f5c6cb); 
+        border-left: 5px solid #58151c; 
     }
 
     .alert-icon {
@@ -318,11 +385,11 @@
         height: 28px;
     }
 
-        .close-btn:hover {
-            opacity: 1;
-            background-color: rgba(0, 0, 0, 0.1);
-            transform: rotate(90deg);
-        }
+    .close-btn:hover {
+        opacity: 1;
+        background-color: rgba(0, 0, 0, 0.1);
+        transform: rotate(90deg);
+    }
 
     .progress-bar {
         position: absolute;
@@ -330,6 +397,18 @@
         left: 0;
         height: 4px;
         background-color: rgba(15, 81, 50, 0.3);
+        width: 100%;
+        transform-origin: left;
+        transform: scaleX(1);
+        animation: progressBar 5s linear forwards;
+    }
+
+    .progress-bar-error { 
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        height: 4px;
+        background-color: rgba(88, 21, 28, 0.3); 
         width: 100%;
         transform-origin: left;
         transform: scaleX(1);
@@ -354,7 +433,6 @@
         }
     }
 
-    /* Efecto al cerrar */
     .alert.hide {
         animation: slideOutRight 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55) forwards;
     }
@@ -368,6 +446,13 @@
         to {
             transform: translateX(120%);
             opacity: 0;
+        }
+    }
+
+    @@media (max-width: 768px) {
+        .pagination-container {
+            flex-direction: column;
+            gap: 15px;
         }
     }
 
@@ -404,9 +489,27 @@
     <div class="custom-container">
         <div class="table-header">
             <h2>Clientes</h2>
-            <a asp-action="Create" class="btn-purple">
-                <i class="bi bi-plus-lg"></i> REGISTRAR CLIENTE
-            </a>
+            <div style="display: flex; gap: 15px; flex-wrap: wrap;">
+                <a asp-action="Create" class="btn-purple">
+                    <i class="bi bi-plus-lg"></i> REGISTRAR CLIENTE
+                </a>
+
+                <div class="dropdown-container">
+                    <button class="btn-report" id="report-dropdown-btn" type="button">
+                        <i class="bi bi-file-earmark-pdf"></i> GENERAR REPORTE PDF
+                    </button>
+                    <div class="dropdown-menu" id="report-dropdown-menu">
+                        <a href="@Url.Action("GeneratePdfReport", "Clientes", new { searchString = ViewData["SearchString"], download = true })" target="_blank">
+                            <i class="bi bi-download"></i> Descargar PDF
+                        </a>
+                        <a href="@Url.Action("GeneratePdfReport", "Clientes", new { searchString = ViewData["SearchString"], download = false })" target="_blank">
+                            <i class="bi bi-printer"></i> Imprimir PDF
+                        </a>
+                    </div>
+                </div>
+
+            </div>
+
             <form asp-controller="Clientes" asp-action="Index" method="get" class="input-search">
                 <input type="search" name="searchString" placeholder="Buscar cliente..." value="@Context.Request.Query["searchString"]" />
                 <button type="submit">
@@ -457,6 +560,66 @@
             </tbody>
         </table>
 
+        <div class="pagination-container">
+            <div class="pagination-info">
+                Mostrando página @ViewData["CurrentPage"] de @ViewData["TotalPages"] - @Model.Count() registros
+            </div>
+
+            <ul class="pagination">
+                <li class="page-item @((int)ViewData["CurrentPage"] == 1 ? "disabled" : "")">
+                    <a class="page-link" href="@Url.Action("Index", new { pageNumber = (int)ViewData["CurrentPage"] - 1, searchString = ViewData["SearchString"] })">
+                        <i class="bi bi-chevron-left"></i>
+                    </a>
+                </li>
+
+                @{
+                    int currentPage = (int)ViewData["CurrentPage"];
+                    int totalPages = (int)ViewData["TotalPages"];
+                    int startPage = Math.Max(1, currentPage - 2);
+                    int endPage = Math.Min(totalPages, currentPage + 2);
+
+                    if (startPage > 1)
+                    {
+                        <li class="page-item">
+                            <a class="page-link" href="@Url.Action("Index", new { pageNumber = 1, searchString = ViewData["SearchString"] })">1</a>
+                        </li>
+                        if (startPage > 2)
+                        {
+                            <li class="page-item disabled">
+                                <span class="page-link">...</span>
+                            </li>
+                        }
+                    }
+
+                    for (int i = startPage; i <= endPage; i++)
+                    {
+                        <li class="page-item @(i == currentPage ? "active" : "")">
+                            <a class="page-link" href="@Url.Action("Index", new { pageNumber = i, searchString = ViewData["SearchString"] })">@i</a>
+                        </li>
+                    }
+
+                    if (endPage < totalPages)
+                    {
+                        if (endPage < totalPages - 1)
+                        {
+                            <li class="page-item disabled">
+                                <span class="page-link">...</span>
+                            </li>
+                        }
+                        <li class="page-item">
+                            <a class="page-link" href="@Url.Action("Index", new { pageNumber = totalPages, searchString = ViewData["SearchString"] })">@totalPages</a>
+                        </li>
+                    }
+                }
+
+                <li class="page-item @((int)ViewData["CurrentPage"] == (int)ViewData["TotalPages"] ? "disabled" : "")">
+                    <a class="page-link" href="@Url.Action("Index", new { pageNumber = (int)ViewData["CurrentPage"] + 1, searchString = ViewData["SearchString"] })">
+                        <i class="bi bi-chevron-right"></i>
+                    </a>
+                </li>
+            </ul>
+        </div>
+
         <div class="table-footer">
             <p>Total de clientes: @Model.Count()</p>
         </div>
@@ -475,6 +638,17 @@
             <span class="close-btn" onclick="dismissAlert(this.parentElement)">&times;</span>
             <div class="progress-bar"></div>
         </div>
+    }
+
+    @if (TempData["ErrorMessage"] != null)
+    {
+        <div class="alert alert-danger" id="errorAlert">
+            <i class="bi bi-exclamation-triangle-fill alert-icon" style="color: #6a1a21;"></i> <div class="alert-content">
+                <div class="alert-title">¡Error!</div>
+                <div class="alert-message">@TempData["ErrorMessage"]</div>
+            </div>
+            <span class="close-btn" onclick="dismissAlert(this.parentElement)">&times;</span>
+            <div class="progress-bar-error"></div> </div>
     }
 </div>
 
@@ -508,8 +682,29 @@
             if (successAlert) {
                 setTimeout(() => {
                     dismissAlert(successAlert);
-                }, 5000);
+                }, 5000);  
             }
+
+            const errorAlert = document.getElementById('errorAlert');
+            if (errorAlert) {
+                setTimeout(() => {
+                    dismissAlert(errorAlert);
+                }, 5000);  
+            }
+            
+            const dropdownBtn = document.getElementById('report-dropdown-btn');
+            const dropdownMenu = document.getElementById('report-dropdown-menu');
+
+            dropdownBtn.addEventListener('click', function() {
+                const isVisible = dropdownMenu.style.display === 'block';
+                dropdownMenu.style.display = isVisible ? 'none' : 'block';
+            });
+
+            window.addEventListener('click', function(e) {
+                if (!dropdownBtn.contains(e.target) && !dropdownMenu.contains(e.target)) {
+                    dropdownMenu.style.display = 'none';
+                }
+            });
         });
     </script>
 }

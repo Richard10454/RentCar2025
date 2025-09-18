@@ -1,0 +1,480 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard de Rentas - Sistema RentCar</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="~/css/Dashboard.css" />
+
+</head>
+<body>
+    <div class="dashboard-container">
+        <div class="dashboard-header animate__animated animate__fadeIn">
+            <h1>Dashboard de Rentas</h1>
+            <p>Gestión y seguimiento de rentas de vehículos</p>
+        </div>
+
+        <div class="stats-grid">
+            <div class="stat-card animate__animated animate__fadeInUp">
+                <div class="card-icon icon-rentas-activas">
+                    <i class="bi bi-file-earmark-check"></i>
+                </div>
+                <div class="stat-number" id="rentas-activas">0</div>
+                <div class="stat-title">Rentas activas</div>
+                <a href="@Url.Action("Index", "Rentas")" class="stat-link">
+                    Ver detalles <i class="bi bi-arrow-right"></i>
+                </a>
+            </div>
+
+            <div class="stat-card animate__animated animate__fadeInUp">
+                <div class="card-icon icon-rentas-completadas">
+                    <i class="bi bi-file-earmark-text"></i>
+                </div>
+                <div class="stat-number" id="rentas-completadas">0</div>
+                <div class="stat-title">Rentas completadas</div>
+                <a href="@Url.Action("HistorialRentas", "Home")" class="stat-link">
+                    Ver historial <i class="bi bi-arrow-right"></i>
+                </a>
+            </div>
+
+            <div class="stat-card animate__animated animate__fadeInUp">
+                <div class="card-icon icon-ingresos">
+                    <i class="bi bi-currency-dollar"></i>
+                </div>
+                <div class="stat-number" id="ingresos-mes">$0</div>
+                <div class="stat-title">Ingresos este mes</div>
+                <a href="/Rentas/GeneratePdfReport" class="stat-link">
+                    Ver reportes <i class="bi bi-arrow-right"></i>
+                </a>
+            </div>
+
+            <div class="stat-card animate__animated animate__fadeInUp">
+                <div class="card-icon icon-promedio">
+                    <i class="bi bi-graph-up"></i>
+                </div>
+                <div class="stat-number" id="dias-promedio">0</div>
+                <div class="stat-title">Días promedio por renta</div>
+                <a href="/Rentas/GeneratePdfReport" class="stat-link">
+                    Ver estadísticas <i class="bi bi-arrow-right"></i>
+                </a>
+            </div>
+        </div>
+
+        <div class="dashboard-content">
+            <div class="recent-sections">
+                <div class="recent-section animate__animated animate__fadeIn">
+                    <div class="section-title">
+                        <i class="bi bi-clock-history"></i> Rentas Recientes
+                    </div>
+                    
+                    <div class="filters">
+                        <button class="filter-btn active" data-filter="all">Todas</button>
+                        <button class="filter-btn" data-filter="active">Activas</button>
+                        <button class="filter-btn" data-filter="completed">Completadas</button>
+                    </div>
+
+                    <div id="rentas-list">
+                        <div class="loading">
+                            <div class="loading-spinner"></div>
+                            <p>Cargando rentas...</p>
+                        </div>
+                    </div>
+
+                    <div class="view-all">
+                        <a href="@Url.Action("Index", "Rentas")" class="stat-link">
+                            Ver todas las rentas <i class="bi bi-arrow-right"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <div class="recent-section animate__animated animate__fadeIn">
+                    <h3 class="section-title"><i class="bi bi-calendar-event"></i> Próximas Devoluciones</h3>
+
+                    <div id="proximas-devoluciones">
+                        <div class="loading">
+                            <div class="loading-spinner"></div>
+                            <p>Cargando próximas devoluciones...</p>
+                        </div>
+                    </div>
+
+                    <div class="view-all">
+                        <a href="/Rentas" class="stat-link">
+                            Ver calendario completo <i class="bi bi-arrow-right"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="charts-section">
+                <div class="chart-container animate__animated animate__fadeIn">
+                    <h3 class="section-title"><i class="bi bi-bar-chart-fill"></i> Rentas por Mes</h3>
+                    <div class="chart-canvas-wrapper">
+                        <canvas id="rentalsByMonthChart"></canvas>
+                    </div>
+                </div>
+
+                <div class="chart-container animate__animated animate__fadeIn">
+                    <h3 class="section-title"><i class="bi bi-pie-chart-fill"></i> Distribución por Tipo de Vehículo</h3>
+                    <div class="chart-canvas-wrapper">
+                        <canvas id="vehicleTypeChart"></canvas>
+                    </div>
+                </div>
+
+                <div class="chart-container animate__animated animate__fadeIn">
+                    <h3 class="section-title"><i class="bi bi-graph-up"></i> Ingresos por Mes</h3>
+                    <div class="chart-canvas-wrapper">
+                        <canvas id="incomeChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="quick-actions">
+            <a href="/Rentas/Create" class="quick-action" id="nueva-renta">
+                <div class="action-icon action-1">
+                    <i class="bi bi-plus-lg"></i>
+                </div>
+                <div class="action-text">Nueva Renta</div>
+            </a>
+
+            <a href="#" class="quick-action" id="registrar-devolucion">
+                <div class="action-icon action-2">
+                    <i class="bi bi-car-front"></i>
+                </div>
+                <div class="action-text">Registrar Devolución</div>
+            </a>
+
+            <a href="/Rentas/GeneratePdfReport" class="quick-action" id="generar-reporte">
+                <div class="action-icon action-3">
+                    <i class="bi bi-file-earmark-text"></i>
+                </div>
+                <div class="action-text">Generar Reporte</div>
+            </a>
+
+            <a href="/Rentas/GeneratePdfReport" class="quick-action" id="imprimir-contratos">
+                <div class="action-icon action-4">
+                    <i class="bi bi-printer"></i>
+                </div>
+                <div class="action-text">Imprimir Contratos</div>
+            </a>
+        </div>
+    </div>
+
+    <div id="notification" class="notification" style="display: none;"></div>
+
+    <script>
+        let rentasData = [];
+        let tiposVehiculo = [];
+
+        document.addEventListener('DOMContentLoaded', function () {
+            const animateElements = document.querySelectorAll('.animate__animated');
+            animateElements.forEach((el, index) => {
+                setTimeout(() => {
+                    el.style.opacity = '1';
+                }, index * 100);
+            });
+
+            cargarDatosDesdeAPI();
+        });
+
+        async function cargarDatosDesdeAPI() {
+            try {
+                const response = await fetch('/Rentas/GetRentasForDashboard');
+                if (!response.ok) {
+                    throw new Error('Error al cargar los datos');
+                }
+                
+                const data = await response.json();
+                rentasData = data.rentas;
+                tiposVehiculo = data.tiposVehiculo || ["Sedán", "SUV", "Pickup", "Hatchback", "Deportivo"];
+                
+                calcularMetricas(rentasData);
+                mostrarRentas(rentasData);
+                mostrarProximasDevoluciones(rentasData);
+                inicializarGraficos(rentasData, tiposVehiculo);
+                configurarFiltros();
+                configurarAccionesRapidas();
+                
+            } catch (error) {
+                console.error('Error:', error);
+                mostrarNotificacion('Error al cargar los datos: ' + error.message, 'error');
+                
+                document.getElementById('rentas-list').innerHTML = 
+                    '<p class="text-center text-muted">Error al cargar las rentas. Por favor, recarga la página.</p>';
+                document.getElementById('proximas-devoluciones').innerHTML = 
+                    '<p class="text-center text-muted">Error al cargar las próximas devoluciones.</p>';
+            }
+        }
+
+        function mostrarNotificacion(mensaje, tipo) {
+            const notification = document.getElementById('notification');
+            notification.textContent = mensaje;
+            notification.className = `notification ${tipo}`;
+            notification.style.display = 'block';
+            
+            setTimeout(() => {
+                notification.classList.add('show');
+            }, 100);
+            
+            setTimeout(() => {
+                notification.classList.remove('show');
+                setTimeout(() => {
+                    notification.style.display = 'none';
+                }, 300);
+            }, 5000);
+        }
+
+        function calcularMetricas(rentas) {
+            const rentasActivas = rentas.filter(r => r.estado).length;
+            document.getElementById('rentas-activas').textContent = rentasActivas;
+
+            const rentasCompletadas = rentas.filter(r => !r.estado).length;
+            document.getElementById('rentas-completadas').textContent = rentasCompletadas;
+
+            const mesActual = new Date().getMonth();
+            const anioActual = new Date().getFullYear();
+            
+            const ingresosMes = rentas
+                .filter(r => {
+                    const fechaRenta = new Date(r.fechaRenta);
+                    return fechaRenta.getMonth() === mesActual && fechaRenta.getFullYear() === anioActual;
+                })
+                .reduce((total, renta) => total + (renta.montoPorDia * renta.cantidadDias), 0);
+            
+            document.getElementById('ingresos-mes').textContent = `$${ingresosMes.toLocaleString()}`;
+
+            const totalDias = rentas.reduce((total, renta) => total + renta.cantidadDias, 0);
+            const diasPromedio = rentas.length > 0 ? (totalDias / rentas.length).toFixed(1) : 0;
+            document.getElementById('dias-promedio').textContent = diasPromedio;
+        }
+
+        function mostrarRentas(rentas) {
+            const rentasList = document.getElementById('rentas-list');
+            rentasList.innerHTML = '';
+
+            if (rentas.length === 0) {
+                rentasList.innerHTML = '<p class="text-center text-muted">No hay rentas para mostrar.</p>';
+                return;
+            }
+
+            const rentasOrdenadas = [...rentas].sort((a, b) => 
+                new Date(b.fechaRenta) - new Date(a.fechaRenta)
+            );
+
+            rentasOrdenadas.forEach(renta => {
+                const rentaItem = document.createElement('div');
+                rentaItem.className = 'renta-item';
+                rentaItem.dataset.estado = renta.estado ? 'active' : 'completed';
+                
+                const esActiva = renta.estado;
+                const iconClass = esActiva ? 'icon-renta-activa' : 'icon-renta-completada';
+                const statusClass = esActiva ? 'status-active' : 'status-completed';
+                const statusText = esActiva ? 'Activa' : 'Completada';
+                
+                const montoTotal = renta.montoPorDia * renta.cantidadDias;
+                const fechaRentaFormateada = new Date(renta.fechaRenta).toLocaleDateString();
+                const fechaDevolucionFormateada = renta.fechaDevolucion ? new Date(renta.fechaDevolucion).toLocaleDateString() : 'Pendiente';
+                
+                rentaItem.innerHTML = `
+                    <div class="renta-icon ${iconClass}">
+                        <i class="bi bi-car-front"></i>
+                    </div>
+                    <div class="renta-details">
+                        <div class="renta-title">${renta.vehiculo.descripcion}</div>
+                        <div class="renta-meta">${renta.cliente.nombre} • ${esActiva ? 'Desde: ' + fechaRentaFormateada : fechaRentaFormateada + ' - ' + fechaDevolucionFormateada}</div>
+                    </div>
+                    <div class="renta-amount">$${montoTotal.toLocaleString()}</div>
+                    <span class="status-badge ${statusClass}">${statusText}</span>
+                `;
+                
+                rentasList.appendChild(rentaItem);
+            });
+        }
+
+        function mostrarProximasDevoluciones(rentas) {
+            const devolucionesList = document.getElementById('proximas-devoluciones');
+            devolucionesList.innerHTML = '';
+
+            const hoy = new Date();
+            const rentasActivas = rentas.filter(r => {
+                if (!r.estado) return false;
+                
+                if (!r.fechaDevolucion) return false;
+                
+                const fechaDevolucion = new Date(r.fechaDevolucion);
+                return fechaDevolucion >= hoy;
+            });
+
+            if (rentasActivas.length === 0) {
+                devolucionesList.innerHTML = '<p class="text-center text-muted">No hay devoluciones próximas.</p>';
+                return;
+            }
+
+            const rentasOrdenadas = [...rentasActivas].sort((a, b) => 
+                new Date(a.fechaDevolucion) - new Date(b.fechaDevolucion)
+            );
+
+            rentasOrdenadas.forEach(renta => {
+                const devolucionItem = document.createElement('div');
+                devolucionItem.className = 'renta-item';
+                
+                const fechaDevolucion = new Date(renta.fechaDevolucion);
+                const diasRestantes = Math.ceil((fechaDevolucion - new Date()) / (1000 * 60 * 60 * 24));
+                
+                const montoTotal = renta.montoPorDia * renta.cantidadDias;
+                const fechaDevolucionFormateada = fechaDevolucion.toLocaleDateString();
+                
+                devolucionItem.innerHTML = `
+                    <div class="renta-icon icon-renta-activa">
+                        <i class="bi bi-car-front"></i>
+                    </div>
+                    <div class="renta-details">
+                        <div class="renta-title">${renta.vehiculo.descripcion}</div>
+                        <div class="renta-meta">${renta.cliente.nombre} • Devuelve: ${fechaDevolucionFormateada}</div>
+                    </div>
+                    <div class="renta-amount">$${montoTotal.toLocaleString()}</div>
+                    <span class="status-badge status-active">${diasRestantes} días</span>
+                `;
+                
+                devolucionesList.appendChild(devolucionItem);
+            });
+        }
+
+        function inicializarGraficos(rentas, tiposVehiculo) {
+            const meses = ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'];
+            const rentasPorMes = Array(12).fill(0);
+            const ingresosPorMes = Array(12).fill(0);
+            
+            rentas.forEach(renta => {
+                const fecha = new Date(renta.fechaRenta);
+                const mes = fecha.getMonth();
+                rentasPorMes[mes]++;
+                ingresosPorMes[mes] += renta.montoPorDia * renta.cantidadDias;
+            });
+            
+            const rentalsByMonthData = {
+                labels: meses,
+                datasets: [{
+                    label: 'Rentas',
+                    data: rentasPorMes,
+                    backgroundColor: 'rgba(108, 77, 255, 0.7)',
+                    borderColor: '#6C4DFF',
+                    borderWidth: 2,
+                    borderRadius: 5
+                }]
+            };
+
+          
+            const distribucionTipos = {};
+            rentas.forEach(renta => {
+                const tipo = renta.vehiculo.tipoVehiculo || "Desconocido";
+                distribucionTipos[tipo] = (distribucionTipos[tipo] || 0) + 1;
+            });
+            
+            const tiposLabels = Object.keys(distribucionTipos);
+            const tiposData = Object.values(distribucionTipos);
+            
+            const colores = ['#6C4DFF', '#FF7D4D', '#4DFF9E', '#2A2D3E', '#FFC94D', '#3498db', '#e74c3c'];
+            
+            const vehicleTypeData = {
+                labels: tiposLabels,
+                datasets: [{
+                    data: tiposData,
+                    backgroundColor: tiposLabels.map((_, i) => colores[i % colores.length]),
+                    borderWidth: 0
+                }]
+            };
+
+            const incomeData = {
+                labels: meses,
+                datasets: [{
+                    label: 'Ingresos ($)',
+                    data: ingresosPorMes,
+                    backgroundColor: 'rgba(46, 204, 113, 0.2)',
+                    borderColor: '#2ecc71',
+                    borderWidth: 2,
+                    tension: 0.3,
+                    fill: true
+                }]
+            };
+
+            const chartOptions = {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'top',
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        grid: {
+                            drawBorder: false
+                        }
+                    },
+                    x: {
+                        grid: {
+                            display: false
+                        }
+                    }
+                }
+            };
+
+            new Chart(document.getElementById('rentalsByMonthChart'), {
+                type: 'bar',
+                data: rentalsByMonthData,
+                options: chartOptions
+            });
+
+            new Chart(document.getElementById('vehicleTypeChart'), {
+                type: 'doughnut',
+                data: vehicleTypeData,
+                options: {
+                    ...chartOptions,
+                    cutout: '70%'
+                }
+            });
+
+            new Chart(document.getElementById('incomeChart'), {
+                type: 'line',
+                data: incomeData,
+                options: chartOptions
+            });
+        }
+
+        function configurarFiltros() {
+            const filterButtons = document.querySelectorAll('.filter-btn');
+            const rentaItems = document.querySelectorAll('.renta-item');
+            
+            filterButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    const filter = button.dataset.filter;
+                    
+                    filterButtons.forEach(btn => btn.classList.remove('active'));
+                    button.classList.add('active');
+                    
+                    rentaItems.forEach(item => {
+                        if (filter === 'all') {
+                            item.style.display = 'flex';
+                        } else {
+                            item.style.display = item.dataset.estado === filter ? 'flex' : 'none';
+                        }
+                    });
+                });
+            });
+        }
+
+        function configurarAccionesRapidas() {
+            document.getElementById('registrar-devolucion').addEventListener('click', function(e) {
+                e.preventDefault();
+                window.location.href = '/Rentas?filter=active';
+            });
+        }
+    </script>
+</body>
+</html>

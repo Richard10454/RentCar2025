@@ -6,6 +6,10 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using RentCar.Models;
+using System.IO;
+using QuestPDF.Fluent;
+using QuestPDF.Helpers;
+using QuestPDF.Infrastructure;
 
 namespace RentCar2025.Controllers
 {
@@ -16,24 +20,35 @@ namespace RentCar2025.Controllers
         public ClientesController(RentCarDbContext context)
         {
             _context = context;
+            QuestPDF.Settings.License = LicenseType.Community;
         }
 
-        // GET: Clientes
-        public async Task<IActionResult> Index(string searchString)
+        public async Task<IActionResult> Index(string searchString, int pageNumber = 1)
         {
-            var clientes = from c in _context.Clientes
-                           select c;
+            int pageSize = 10;
+            var query = _context.Clientes.AsQueryable();
 
             if (!string.IsNullOrEmpty(searchString))
             {
-                clientes = clientes.Where(c => c.Nombre.Contains(searchString) || c.Cedula.Contains(searchString));
+                query = query.Where(c => c.Nombre.Contains(searchString) || c.Cedula.Contains(searchString));
             }
 
-            return View(await clientes.ToListAsync());
+            int totalClientes = await query.CountAsync();
+            int totalPages = (int)Math.Ceiling(totalClientes / (double)pageSize);
+
+            var clientesPaginados = await query
+                .Skip((pageNumber - 1) * pageSize)
+                .Take(pageSize)
+                .ToListAsync();
+
+            ViewData["CurrentFilter"] = searchString;
+            ViewData["CurrentPage"] = pageNumber;
+            ViewData["TotalPages"] = totalPages;
+            ViewData["SearchString"] = searchString;
+
+            return View(clientesPaginados);
         }
 
-
-        // GET: Clientes/Details/5
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -51,15 +66,11 @@ namespace RentCar2025.Controllers
             return View(cliente);
         }
 
-        // GET: Clientes/Create
         public IActionResult Create()
         {
             return View();
         }
 
-        // POST: Clientes/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,Nombre,Cedula,NoTarjetaCR,LimiteCredito,TipoPersona,Estado")] Cliente cliente)
@@ -68,13 +79,12 @@ namespace RentCar2025.Controllers
             {
                 _context.Add(cliente);
                 await _context.SaveChangesAsync();
-                TempData["SuccessMessage"] = "¡Cliente registrado exitosamente!"; 
+                TempData["SuccessMessage"] = "¡Cliente registrado exitosamente!";
                 return RedirectToAction(nameof(Index));
             }
             return View(cliente);
         }
 
-        // GET: Clientes/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -90,9 +100,6 @@ namespace RentCar2025.Controllers
             return View(cliente);
         }
 
-        // POST: Clientes/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("Id,Nombre,Cedula,NoTarjetaCR,LimiteCredito,TipoPersona,Estado")] Cliente cliente)
@@ -108,7 +115,7 @@ namespace RentCar2025.Controllers
                 {
                     _context.Update(cliente);
                     await _context.SaveChangesAsync();
-                    TempData["SuccessMessage"] = "¡Cliente actualizado exitosamente!"; 
+                    TempData["SuccessMessage"] = "¡Cliente actualizado exitosamente!";
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -126,7 +133,6 @@ namespace RentCar2025.Controllers
             return View(cliente);
         }
 
-        // GET: Clientes/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -144,11 +150,25 @@ namespace RentCar2025.Controllers
             return View(cliente);
         }
 
-        // POST: Clientes/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
+            var tieneInspecciones = await _context.Inspecciones.AnyAsync(i => i.ClienteId == id);
+            var tieneRentas = await _context.Rentas.AnyAsync(r => r.ClienteId == id);
+
+            if (tieneRentas)
+            {
+                TempData["ErrorMessage"] = "¡No se puede eliminar este cliente porque tiene rentas asociadas!";
+                return RedirectToAction(nameof(Index));
+            }
+
+            if (tieneInspecciones)
+            {
+                TempData["ErrorMessage"] = "¡No se puede eliminar este cliente porque tiene inspecciones asociadas!";
+                return RedirectToAction(nameof(Index));
+            }
+
             var cliente = await _context.Clientes.FindAsync(id);
             if (cliente != null)
             {
@@ -156,13 +176,93 @@ namespace RentCar2025.Controllers
             }
 
             await _context.SaveChangesAsync();
-            TempData["SuccessMessage"] = "¡Cliente eliminado exitosamente!"; 
+            TempData["SuccessMessage"] = "¡Cliente eliminado exitosamente!";
             return RedirectToAction(nameof(Index));
         }
 
         private bool ClienteExists(int id)
         {
             return _context.Clientes.Any(e => e.Id == id);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GeneratePdfReport(string searchString, bool download = true)
+        {
+            IQueryable<Cliente> clientes = _context.Clientes;
+            if (!string.IsNullOrEmpty(searchString))
+            {
+                clientes = clientes.Where(c => c.Nombre.Contains(searchString) || c.Cedula.Contains(searchString) || c.NoTarjetaCR.Contains(searchString));
+            }
+
+            var clientList = await clientes.OrderBy(c => c.Nombre).ToListAsync();
+            var document = Document.Create(container =>
+            {
+                container.Page(page =>
+                {
+                    page.Size(PageSizes.A4);
+                    page.Margin(30);
+                    page.PageColor(Colors.White);
+                    page.DefaultTextStyle(x => x.FontSize(10));
+                    page.Header().Text("Reporte de Clientes - RentCar").SemiBold().FontSize(20).FontColor(Colors.Grey.Darken4);
+                    page.Content().PaddingVertical(10).Column(column =>
+                    {
+                        column.Spacing(5);
+                        column.Item().Text($"Fecha del Reporte: {DateTime.Now:dd/MM/yyyy HH:mm}").FontSize(8).AlignRight();
+                        column.Item().Text($"Total de Clientes: {clientList.Count}").FontSize(8).AlignRight();
+                        column.Item().Table(table =>
+                        {
+                            table.ColumnsDefinition(columns =>
+                            {
+                                columns.RelativeColumn();
+                                columns.RelativeColumn();
+                                columns.RelativeColumn();
+                                columns.RelativeColumn();
+                                columns.RelativeColumn();
+                                columns.RelativeColumn();
+                            });
+
+                            table.Header(header =>
+                            {
+                                header.Cell().BorderBottom(1).Padding(5).Text("Nombre").SemiBold().FontSize(10);
+                                header.Cell().BorderBottom(1).Padding(5).Text("Cédula").SemiBold().FontSize(10);
+                                header.Cell().BorderBottom(1).Padding(5).Text("No. Tarjeta CR").SemiBold().FontSize(10);
+                                header.Cell().BorderBottom(1).Padding(5).Text("Límite Crédito").SemiBold().FontSize(10);
+                                header.Cell().BorderBottom(1).Padding(5).Text("Tipo Persona").SemiBold().FontSize(10);
+                                header.Cell().BorderBottom(1).Padding(5).Text("Estado").SemiBold().FontSize(10);
+                            });
+
+                            foreach (var client in clientList)
+                            {
+                                table.Cell().BorderBottom(0.5f).BorderColor(Colors.Grey.Lighten2).Padding(5).Text(client.Nombre);
+                                table.Cell().BorderBottom(0.5f).BorderColor(Colors.Grey.Lighten2).Padding(5).Text(client.Cedula);
+                                table.Cell().BorderBottom(0.5f).BorderColor(Colors.Grey.Lighten2).Padding(5).Text(client.NoTarjetaCR);
+                                table.Cell().BorderBottom(0.5f).BorderColor(Colors.Grey.Lighten2).Padding(5).Text(client.LimiteCredito.ToString("C"));
+                                table.Cell().BorderBottom(0.5f).BorderColor(Colors.Grey.Lighten2).Padding(5).Text(client.TipoPersona);
+                                table.Cell().BorderBottom(0.5f).BorderColor(Colors.Grey.Lighten2).Padding(5).Text(client.Estado ? "Activo" : "Inactivo").FontColor(client.Estado ? Colors.Green.Darken2 : Colors.Red.Darken2);
+                            }
+                        });
+                    });
+
+                    page.Footer().AlignRight().Text(x =>
+                    {
+                        x.Span("Página ").FontSize(8);
+                        x.CurrentPageNumber().FontSize(8);
+                        x.Span(" de ").FontSize(8);
+                        x.TotalPages().FontSize(8);
+                    });
+                });
+            });
+
+            var pdfBytes = document.GeneratePdf();
+
+            if (download)
+            {
+                return File(pdfBytes, "application/pdf", $"ReporteClientes_{DateTime.Now:yyyyMMddHHmmss}.pdf");
+            }
+            else
+            {
+                return File(pdfBytes, "application/pdf");
+            }
         }
     }
 }

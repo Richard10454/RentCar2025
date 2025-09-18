@@ -1,0 +1,320 @@
+﻿
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Poppins", sans-serif;
+}
+
+body {
+    background-image: url("website-forms-bg.jpg"); /* Ensure this path is correct */
+    background-size: cover;
+    background-position: center;
+    min-height: 100vh;
+    overflow: hidden;
+}
+
+.home {
+    position: relative;
+    height: 100vh;
+    width: 100%;
+}
+
+    .home::before {
+        content: "";
+        position: absolute;
+        height: 100%;
+        width: 100%;
+        background-color: rgba(0, 0, 0, 0.6);
+        z-index: 100;
+        opacity: 0;
+        transition: opacity 0.5s ease;
+    }
+
+    .home.active::before {
+        opacity: 1;
+    }
+
+.form_container {
+    position: absolute;
+    max-width: 600px;
+    width: 90%;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(0.8);
+    z-index: 101;
+    background: #fff;
+    padding: 40px;
+    border-radius: 16px;
+    box-shadow: 0 5px 25px rgba(0,0,0,0.35);
+    opacity: 0;
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+    .form_container.active {
+        opacity: 1;
+        transform: translate(-50%, -50%) scale(1);
+    }
+
+.form_close {
+    position: absolute;
+    top: 10px;
+    right: 20px;
+    color: #0b0217;
+    font-size: 22px;
+    opacity: 0.7;
+    cursor: pointer;
+    transition: transform 0.2s, opacity 0.2s;
+}
+
+    .form_close:hover {
+        opacity: 1;
+        transform: rotate(90deg);
+    }
+
+.form_container h2 {
+    font-size: 22px;
+    color: #0b0217;
+    text-align: center;
+    margin-bottom: 10px;
+    opacity: 0;
+    animation: fadeIn 0.5s ease 0.3s forwards;
+}
+
+.input_box {
+    position: relative;
+    margin-top: 30px;
+    width: 100%;
+    height: 50px;
+    opacity: 0;
+    transform: translateY(20px);
+    transition: all 0.4s ease;
+}
+
+    /* Animation delays for input boxes */
+    .input_box:nth-child(1) {
+        transition-delay: 0.4s;
+    }
+
+    .input_box:nth-child(2) {
+        transition-delay: 0.5s;
+    }
+
+    .input_box:nth-child(3) {
+        transition-delay: 0.6s;
+    }
+
+    .input_box:nth-child(4) {
+        transition-delay: 0.7s;
+    }
+
+    .input_box:nth-child(5) {
+        transition-delay: 0.8s;
+    }
+
+    .input_box:nth-child(6) {
+        transition-delay: 0.9s;
+    }
+/* For the dropdown */
+
+.form_container.active .input_box {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.input_box input,
+.input_box select { /* Apply styles to select as well */
+    height: 100%;
+    width: 100%;
+    border: none;
+    outline: none;
+    padding: 0 35px;
+    font-size: 16px;
+    border-bottom: 2px solid #aaaaaa;
+    transition: border-color 0.3s ease;
+    background-color: transparent; /* Ensure background is transparent for select */
+    -webkit-appearance: none; /* Remove default select styles for better custom styling */
+    -moz-appearance: none;
+    appearance: none;
+}
+
+    .input_box input:focus,
+    .input_box select:focus {
+        border-color: #7d2ae8;
+    }
+
+.input_box i {
+    position: absolute;
+    top: 50%;
+    left: 0;
+    transform: translateY(-50%);
+    font-size: 20px;
+    color: #707070;
+    transition: color 0.3s ease;
+}
+
+.input_box input:focus ~ i,
+.input_box select:focus ~ i { /* Apply to select as well */
+    color: #7d2ae8;
+}
+
+/* Styles for the dropdown arrow */
+.input_box.select_box::after {
+    content: "\f282"; /* Bootstrap icon for chevron-down */
+    font-family: "bootstrap-icons";
+    position: absolute;
+    top: 50%;
+    right: 10px;
+    transform: translateY(-50%);
+    color: #707070;
+    pointer-events: none; /* Make sure the arrow doesn't interfere with select clicks */
+}
+
+
+.toggle_switch_container {
+    margin-top: 30px;
+    display: flex;
+    align-items: center;
+    column-gap: 15px;
+    font-size: 16px;
+    color: #0b0217;
+    opacity: 0;
+    transform: translateY(20px);
+    transition: all 0.4s ease 1s;
+}
+
+.form_container.active .toggle_switch_container {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.switch {
+    position: relative;
+    display: inline-block;
+    width: 48px;
+    height: 28px;
+}
+
+    .switch input {
+        opacity: 0;
+        width: 0;
+        height: 0;
+    }
+
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    transition: 0.4s;
+    border-radius: 28px;
+}
+
+    .slider:before {
+        position: absolute;
+        content: "";
+        height: 20px;
+        width: 20px;
+        left: 4px;
+        bottom: 4px;
+        background-color: white;
+        transition: 0.4s;
+        border-radius: 50%;
+    }
+
+input:checked + .slider {
+    background-color: #7d2ae8;
+}
+
+input:focus + .slider {
+    box-shadow: 0 0 1px #7d2ae8;
+}
+
+input:checked + .slider:before {
+    transform: translateX(20px);
+}
+
+.toggle_label {
+    cursor: pointer;
+}
+
+.form_container .button {
+    font-size: 16px;
+    background: #7d2ae8;
+    color: #fff;
+    margin-top: 40px;
+    width: 100%;
+    padding: 15px 0;
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: background 0.3s, transform 0.2s;
+    opacity: 0;
+    transform: translateY(20px);
+    transition: all 0.4s ease 1.1s;
+}
+
+.form_container.active .button {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.form_container .button:hover {
+    background: #6825c1;
+    transform: translateY(-2px);
+}
+
+.login_signup {
+    font-size: 12px;
+    text-align: center;
+    margin-top: 25px;
+    opacity: 0;
+    transition: opacity 0.4s ease 1.2s;
+}
+
+.form_container.active .login_signup {
+    opacity: 1;
+}
+
+.text-danger {
+    font-size: 12px;
+    color: #e74c3c;
+    display: block;
+    margin-top: 3px;
+}
+
+a {
+    color: #7d2ae8;
+    text-decoration: none;
+    transition: color 0.3s;
+}
+
+    a:hover {
+        color: #6825c1;
+        text-decoration: underline;
+    }
+
+@@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+@@keyframes slideIn {
+    from {
+        transform: translateY(20px);
+        opacity: 0;
+    }
+
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}

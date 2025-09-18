@@ -14,7 +14,6 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600;700&display=swap" rel="stylesheet" />
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css" rel="stylesheet" />
     <style>
-        /* Estilos generales */
         * {
             margin: 0;
             padding: 0;
@@ -44,7 +43,7 @@
                 background-color: rgba(0, 0, 0, 0.6);
                 z-index: 100;
                 opacity: 0;
-                transition: opacity 0.5s ease;
+                transition: opacity 0.3s ease; 
             }
 
             .home.active::before {
@@ -57,14 +56,14 @@
             width: 90%;
             top: 50%;
             left: 50%;
-            transform: translate(-50%, -50%) scale(0.8);
+            transform: translate(-50%, -50%) scale(0.9); 
             z-index: 101;
             background: #fff;
             padding: 40px;
             border-radius: 16px;
-            box-shadow: 0 5px 25px rgba(0,0,0,0.35);
+            box-shadow: 0 5px 25px rgba(0, 0, 0, 0.35);
             opacity: 0;
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); 
         }
 
             .details_container.active {
@@ -94,7 +93,7 @@
             text-align: center;
             margin-bottom: 30px;
             opacity: 0;
-            animation: fadeIn 0.5s ease 0.3s forwards;
+            animation: fadeIn 0.3s ease 0.2s forwards; 
         }
 
         .details_list {
@@ -104,6 +103,10 @@
             margin-bottom: 30px;
         }
 
+        .detail_item {
+            display: contents; 
+        }
+
         .detail_label {
             font-weight: 600;
             color: #555;
@@ -111,7 +114,7 @@
             padding-right: 15px;
             opacity: 0;
             transform: translateX(-20px);
-            transition: all 0.4s ease;
+            transition: all 0.3s ease; 
         }
 
         .detail_value {
@@ -120,7 +123,7 @@
             padding-left: 15px;
             opacity: 0;
             transform: translateX(20px);
-            transition: all 0.4s ease;
+            transition: all 0.3s ease; 
         }
 
         .details_container.active .detail_label,
@@ -129,97 +132,26 @@
             transform: translateX(0);
         }
 
-        /* Adjusting the transition-delay for the new order */
-        /* Inspeccion */
-        .detail_label:nth-of-type(1) {
-            transition-delay: 0.4s;
-        }
-
-        .detail_value:nth-of-type(2) {
-            transition-delay: 0.5s;
-        }
-
-        /* Empleado */
-        .detail_label:nth-of-type(3) {
-            transition-delay: 0.6s;
-        }
-
-        .detail_value:nth-of-type(4) {
-            transition-delay: 0.7s;
-        }
-
-        /* Vehiculo */
-        .detail_label:nth-of-type(5) {
-            transition-delay: 0.8s;
-        }
-
-        .detail_value:nth-of-type(6) {
-            transition-delay: 0.9s;
-        }
-
-        /* Cliente */
-        .detail_label:nth-of-type(7) {
-            transition-delay: 1.0s;
-        }
-
-        .detail_value:nth-of-type(8) {
-            transition-delay: 1.1s;
-        }
-
-        /* FechaRenta */
-        .detail_label:nth-of-type(9) {
-            transition-delay: 1.2s;
-        }
-
-        .detail_value:nth-of-type(10) {
-            transition-delay: 1.3s;
-        }
-
-        /* FechaDevolucion */
-        .detail_label:nth-of-type(11) {
-            transition-delay: 1.4s;
-        }
-
-        .detail_value:nth-of-type(12) {
-            transition-delay: 1.5s;
-        }
-
-        /* MontoPorDia */
-        .detail_label:nth-of-type(13) {
-            transition-delay: 1.6s;
-        }
-
-        .detail_value:nth-of-type(14) {
-            transition-delay: 1.7s;
-        }
-
-        /* CantidadDias */
-        .detail_label:nth-of-type(15) {
-            transition-delay: 1.8s;
-        }
-
-        .detail_value:nth-of-type(16) {
-            transition-delay: 1.9s;
-        }
-
-        /* Comentario */
-        .detail_label:nth-of-type(17) {
-            transition-delay: 2.0s;
-        }
-
-        .detail_value:nth-of-type(18) {
-            transition-delay: 2.1s;
-        }
-
-        /* Estado (now later in the sequence due to new order) */
-        .detail_label:nth-of-type(19) {
-            transition-delay: 2.2s;
-        }
-
-        .detail_value:nth-of-type(20) {
-            transition-delay: 2.3s;
-        }
-
+        .details_list > *:nth-child(1) { transition-delay: 0.2s; }
+        .details_list > *:nth-child(2) { transition-delay: 0.25s; } 
+        .details_list > *:nth-child(3) { transition-delay: 0.3s; }
+        .details_list > *:nth-child(4) { transition-delay: 0.35s; } 
+        .details_list > *:nth-child(5) { transition-delay: 0.4s; }
+        .details_list > *:nth-child(6) { transition-delay: 0.45s; } 
+        .details_list > *:nth-child(7) { transition-delay: 0.5s; } 
+        .details_list > *:nth-child(8) { transition-delay: 0.55s; } 
+        .details_list > *:nth-child(9) { transition-delay: 0.6s; } 
+        .details_list > *:nth-child(10) { transition-delay: 0.65s; }
+        .details_list > *:nth-child(11) { transition-delay: 0.7s; } 
+        .details_list > *:nth-child(12) { transition-delay: 0.75s; }
+        .details_list > *:nth-child(13) { transition-delay: 0.8s; }
+        .details_list > *:nth-child(14) { transition-delay: 0.85s; } 
+        .details_list > *:nth-child(15) { transition-delay: 0.9s; } 
+        .details_list > *:nth-child(16) { transition-delay: 0.95s; } 
+        .details_list > *:nth-child(17) { transition-delay: 1.0s; } 
+        .details_list > *:nth-child(18) { transition-delay: 1.05s; } 
+        .details_list > *:nth-child(19) { transition-delay: 1.1s; } 
+        .details_list > *:nth-child(20) { transition-delay: 1.15s; } 
 
         .action_buttons {
             display: flex;
@@ -227,8 +159,7 @@
             gap: 20px;
             margin-top: 40px;
             opacity: 0;
-            /* Adjust this delay based on the last animated element's delay + a small buffer */
-            transition: opacity 0.4s ease 2.4s;
+            transition: opacity 0.3s ease 1.2s; 
         }
 
         .details_container.active .action_buttons {
@@ -303,8 +234,6 @@
             <h2>Detalles de Renta</h2>
 
             <div class="details_list">
-              
-
                 <div class="detail_label">@Html.DisplayNameFor(model => model.Empleado)</div>
                 <div class="detail_value">@Html.DisplayFor(model => model.Empleado.Nombre)</div>
 
@@ -329,14 +258,12 @@
                 <div class="detail_label">@Html.DisplayNameFor(model => model.Comentario)</div>
                 <div class="detail_value">@Html.DisplayFor(model => model.Comentario)</div>
 
+                
+
                 <div class="detail_label">@Html.DisplayNameFor(model => model.Estado)</div>
                 <div class="detail_value @(Model.Estado ? "status_active" : "status_inactive")">
                     @(Model.Estado ? "Activo" : "Inactivo")
                 </div>
-
-
-                <div class="detail_label">@Html.DisplayNameFor(model => model.Inspeccion)</div>
-                <div class="detail_value">Inspección #@Html.DisplayFor(model => model.Inspeccion.Id)</div>
             </div>
 
             <div class="action_buttons">
@@ -351,12 +278,10 @@
     </div>
 
     <script>
-        // Activar animaciones al cargar la página
         document.addEventListener('DOMContentLoaded', function() {
             const home = document.getElementById('home');
             const detailsContainer = document.getElementById('detailsContainer');
 
-            // Pequeño retraso para asegurar que el DOM está listo
             setTimeout(() => {
                 home.classList.add('active');
                 detailsContainer.classList.add('active');

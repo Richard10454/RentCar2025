@@ -1,0 +1,305 @@
+﻿@model RentCar.Models.Renta
+
+@{
+    ViewData["Title"] = "Devolver Renta";
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8" />
+    <title>@ViewData["Title"]</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600;700&display=swap" rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css" rel="stylesheet" />
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Poppins", sans-serif;
+        }
+
+        body {
+            background-image: url("website-forms-bg.jpg");
+            background-size: cover;
+            background-position: center;
+            min-height: 100vh;
+            overflow: hidden;
+        }
+
+        .home {
+            position: relative;
+            height: 100vh;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .home::before {
+            content: "";
+            position: absolute;
+            height: 100%;
+            width: 100%;
+            background-color: rgba(0, 0, 0, 0.6);
+            z-index: 100;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+
+        .home.active::before {
+            opacity: 1;
+        }
+
+        .return_container {
+            position: relative;
+            max-width: 700px;
+            width: 90%;
+            z-index: 101;
+            background: #fff;
+            padding: 40px;
+            border-radius: 16px;
+            box-shadow: 0 5px 25px rgba(0,0,0,0.35);
+            opacity: 0;
+            transform: scale(0.8);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .return_container.active {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        .form_close {
+            position: absolute;
+            top: 10px;
+            right: 20px;
+            color: #0b0217;
+            font-size: 22px;
+            opacity: 0.7;
+            cursor: pointer;
+            transition: transform 0.2s, opacity 0.2s;
+        }
+
+        .form_close:hover {
+            opacity: 1;
+            transform: rotate(90deg);
+        }
+
+        .return_container h2 {
+            font-size: 24px;
+            color: #27ae60;
+            text-align: center;
+            margin-bottom: 15px;
+            opacity: 0;
+            animation: fadeIn 0.5s ease 0.3s forwards;
+        }
+
+        .return_container h3 {
+            font-size: 18px;
+            color: #333;
+            text-align: center;
+            margin-bottom: 30px;
+            font-weight: 500;
+            opacity: 0;
+            animation: fadeIn 0.5s ease 0.4s forwards;
+        }
+
+        .details_list {
+            display: flex;
+            flex-direction: column; 
+            gap: 15px; 
+            margin-bottom: 30px;
+        }
+        
+        .detail_item {
+            display: flex;
+            justify-content: space-between; 
+            align-items: center;
+            padding: 5px 0;
+            border-bottom: 1px solid #eee; 
+        }
+        
+        .detail_item:last-child {
+            border-bottom: none;
+        }
+
+        .detail_label {
+            font-weight: 600;
+            color: #555;
+            flex-basis: 40%; 
+            text-align: right;
+            padding-right: 15px;
+            opacity: 0;
+            transform: translateY(-20px); 
+            transition: all 0.4s ease;
+        }
+
+        .detail_value {
+            font-weight: 500;
+            color: #333;
+            flex-basis: 60%; 
+            padding-left: 15px;
+            opacity: 0;
+            transform: translateY(-20px); 
+            transition: all 0.4s ease;
+        }
+
+        .return_container.active .detail_label,
+        .return_container.active .detail_value {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .detail_item:nth-child(1) .detail_label, .detail_item:nth-child(1) .detail_value { transition-delay: 0.5s; }
+        .detail_item:nth-child(2) .detail_label, .detail_item:nth-child(2) .detail_value { transition-delay: 0.6s; }
+        .detail_item:nth-child(3) .detail_label, .detail_item:nth-child(3) .detail_value { transition-delay: 0.7s; }
+        .detail_item:nth-child(4) .detail_label, .detail_item:nth-child(4) .detail_value { transition-delay: 0.8s; }
+        .detail_item:nth-child(5) .detail_label, .detail_item:nth-child(5) .detail_value { transition-delay: 0.9s; }
+        .detail_item:nth-child(6) .detail_label, .detail_item:nth-child(6) .detail_value { transition-delay: 1.0s; }
+
+
+        .return_form {
+            margin-top: 40px;
+            text-align: center;
+            opacity: 0;
+            transition: opacity 0.4s ease 1.5s;
+        }
+
+        .return_container.active .return_form {
+            opacity: 1;
+        }
+
+        .btn_return, .btn_cancel {
+            padding: 12px 25px;
+            border-radius: 8px;
+            font-weight: 500;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        .btn_return {
+            background: #27ae60;
+            color: white;
+            margin-right: 15px;
+        }
+
+        .btn_return:hover {
+            background: #219653;
+            transform: translateY(-2px);
+        }
+
+        .btn_cancel {
+            background: #f1f1f1;
+            color: #333;
+        }
+
+        .btn_cancel:hover {
+            background: #ddd;
+            transform: translateY(-2px);
+        }
+
+        .info_icon {
+            display: block;
+            text-align: center;
+            font-size: 50px;
+            color: #27ae60;
+            margin-bottom: 20px;
+            opacity: 0;
+            animation: fadeIn 0.5s ease 0.2s forwards;
+        }
+
+        @@keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
+        
+        @@keyframes slideInUp {
+            from {
+                transform: translateY(20px);
+                opacity: 0;
+            }
+
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="home" id="home">
+        <div class="return_container" id="returnContainer">
+            <span class="form_close" onclick="window.location.href='@Url.Action("Index")'">&times;</span>
+            <div class="info_icon">
+                <i class="bi bi-check-circle-fill"></i>
+            </div>
+            <h2>Devolver Renta</h2>
+            <h3>¿Está seguro de que desea registrar la devolución de esta renta?</h3>
+
+            <div class="details_list">
+                <div class="detail_item">
+                    <div class="detail_label">Número de Renta</div>
+                    <div class="detail_value">#@Html.DisplayFor(model => model.Id)</div>
+                </div>
+
+                <div class="detail_item">
+                    <div class="detail_label">@Html.DisplayNameFor(model => model.Vehiculo)</div>
+                    <div class="detail_value">@Html.DisplayFor(model => model.Vehiculo.Descripcion)</div>
+                </div>
+
+                <div class="detail_item">
+                    <div class="detail_label">@Html.DisplayNameFor(model => model.Cliente)</div>
+                    <div class="detail_value">@Html.DisplayFor(model => model.Cliente.Nombre)</div>
+                </div>
+
+                <div class="detail_item">
+                    <div class="detail_label">@Html.DisplayNameFor(model => model.FechaRenta)</div>
+                    <div class="detail_value">@Html.DisplayFor(model => model.FechaRenta)</div>
+                </div>
+
+                <div class="detail_item">
+                    <div class="detail_label">Días de Renta (calculado)</div>
+                    <div class="detail_value">@Html.DisplayFor(model => model.CantidadDias)</div>
+                </div>
+
+                <div class="detail_item">
+                    <div class="detail_label">@Html.DisplayNameFor(model => model.MontoPorDia)</div>
+                    <div class="detail_value">@Model.MontoPorDia.ToString("C")</div>
+                </div>
+            </div>
+
+            <form asp-action="Devolver" asp-route-id="@Model.Id" method="post" class="return_form">
+                <button type="submit" class="btn_return">
+                    <i class="bi bi-check-lg"></i> Confirmar Devolución
+                </button>
+                <a asp-action="Index" class="btn_cancel">
+                    <i class="bi bi-x-circle"></i> Cancelar
+                </a>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const home = document.getElementById('home');
+            const returnContainer = document.getElementById('returnContainer');
+
+            setTimeout(() => {
+                home.classList.add('active');
+                returnContainer.classList.add('active');
+            }, 50);
+        });
+    </script>
+</body>
+</html>

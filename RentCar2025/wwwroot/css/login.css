@@ -1,0 +1,305 @@
+﻿
+:root {
+    --primary-color: #6C4DFF;
+    --secondary-color: #2A2D3E;
+    --accent-color: #FF7D4D;
+    --light-color: #F8F9FA;
+    --dark-color: #212529;
+    --text-color: #495057;
+    --text-light: #6C757D;
+    --google-red: #DB4437;
+}
+
+body {
+    background-color: #F5F7FA;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    font-family: 'Poppins', sans-serif;
+}
+
+.login-container {
+    display: grid;
+    grid-template-columns: 1fr 1.25fr;
+    max-width: 1100px;
+    width: 100%;
+    margin: 2rem;
+    min-height: 700px;
+    background: white;
+    border-radius: 24px;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.15);
+    overflow: hidden;
+}
+
+/* --- Columna de Branding con animación --- */
+.login-branding {
+    background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+    color: white;
+    padding: 3rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+    /* --- NUEVOS ESTILOS PARA LA ANIMACIÓN --- */
+    background-size: 200% 200%; /* Hace el fondo más grande para que se pueda mover */
+    animation: moveGradient 15s ease-in-out infinite; /* Aplica la animación */
+}
+
+.branding-content {
+    position: relative;
+    z-index: 2;
+    text-align: center;
+}
+
+.text-highlight {
+    color: var(--accent-color);
+}
+
+.hero-shapes .shape {
+    position: absolute;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.08);
+    animation: float 10s ease-in-out infinite;
+}
+
+.hero-shapes .shape-1 {
+    width: 300px;
+    height: 300px;
+    top: -100px;
+    right: -100px;
+    animation-delay: 0s;
+}
+
+.hero-shapes .shape-2 {
+    width: 200px;
+    height: 200px;
+    bottom: -50px;
+    left: -50px;
+    animation-delay: 2s;
+}
+
+.hero-shapes .shape-3 {
+    width: 150px;
+    height: 150px;
+    bottom: 15%;
+    right: 10%;
+    animation-delay: 4s;
+}
+
+
+/* --- Columna de Formulario --- */
+.login-form-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 3rem;
+}
+
+.form-wrapper {
+    width: 100%;
+    max-width: 400px;
+}
+
+/* --- Alerta de Error Mejorada --- */
+.custom-alert {
+    background-color: #ffebee;
+    color: #c62828;
+    border: none;
+    border-left: 5px solid #d32f2f;
+    border-radius: 12px;
+    padding: 1rem 1.25rem;
+    display: flex;
+    align-items: center;
+    font-size: 0.9rem;
+    font-weight: 500;
+    box-shadow: 0 4px 15px rgba(211, 47, 47, 0.1);
+    list-style: none;
+    margin-bottom: 1.5rem;
+}
+
+    .custom-alert::before {
+        font-family: 'bootstrap-icons';
+        content: '\f341';
+        font-size: 1.2rem;
+        margin-right: 0.75rem;
+    }
+
+.validation-summary-valid {
+    display: none;
+}
+
+/* --- Formulario con Etiquetas Flotantes --- */
+.form-floating-group {
+    position: relative;
+    margin-bottom: 2rem;
+}
+
+    .form-floating-group .form-control {
+        height: 58px;
+        padding: 1.5rem 1.25rem 0.5rem;
+        border-radius: 12px;
+        border: 1px solid #e0e0e0;
+    }
+
+    .form-floating-group label {
+        position: absolute;
+        top: 50%;
+        left: 1.25rem;
+        transform: translateY(-50%);
+        color: var(--text-light);
+        transition: all 0.2s ease-out;
+        pointer-events: none;
+        display: flex;
+        align-items: center;
+    }
+
+    .form-floating-group .form-control:focus + label,
+    .form-floating-group .form-control:not(:placeholder-shown) + label {
+        top: 18px;
+        font-size: 0.75rem;
+        color: var(--primary-color);
+    }
+
+.input-group .form-control:focus ~ label,
+.input-group .form-control:not(:placeholder-shown) ~ label {
+    top: 18px;
+    font-size: 0.75rem;
+    color: var(--primary-color);
+}
+
+.form-control:focus {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 0.25rem rgba(108, 77, 255, 0.2);
+}
+
+.toggle-password {
+    border-radius: 0 12px 12px 0 !important;
+    border-left: none;
+}
+
+.input-group .form-control {
+    border-right: none;
+    border-radius: 12px 0 0 12px !important;
+}
+
+/* --- Botones y Enlaces --- */
+.btn-lg {
+    padding: 0.8rem 1.5rem;
+    font-size: 1rem;
+    border-radius: 12px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.btn-primary {
+    background: linear-gradient(90deg, var(--primary-color), #8e75ff);
+    border: none;
+    box-shadow: 0 4px 15px rgba(108, 77, 255, 0.3);
+}
+
+    .btn-primary:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 8px 25px rgba(108, 77, 255, 0.4);
+    }
+
+.btn-social {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+    border: 1px solid #e0e0e0;
+    background-color: white;
+    color: var(--text-color);
+}
+
+    .btn-social:hover {
+        background-color: #f7f7f7;
+        border-color: #ccc;
+    }
+
+    .btn-social.btn-google:hover {
+        color: var(--google-red);
+    }
+
+.divider-text {
+    display: flex;
+    align-items: center;
+    text-align: center;
+    color: var(--text-light);
+    font-size: 0.8rem;
+}
+
+    .divider-text::before,
+    .divider-text::after {
+        content: '';
+        flex: 1;
+        border-bottom: 1px solid #e0e0e0;
+    }
+
+    .divider-text:not(:empty)::before {
+        margin-right: .5em;
+    }
+
+    .divider-text:not(:empty)::after {
+        margin-left: .5em;
+    }
+
+/* --- Animaciones --- */
+@keyframes float {
+    0% {
+        transform: translateY(0px) scale(1);
+    }
+
+    50% {
+        transform: translateY(-20px) scale(1.05);
+    }
+
+    100% {
+        transform: translateY(0px) scale(1);
+    }
+}
+
+/* --- NUEVA ANIMACIÓN DE GRADIENTE --- */
+@keyframes moveGradient {
+    0% {
+        background-position: 0% 50%;
+    }
+
+    50% {
+        background-position: 100% 50%;
+    }
+
+    100% {
+        background-position: 0% 50%;
+    }
+}
+
+
+/* --- Responsive --- */
+@media (max-width: 992px) {
+    body {
+        display: block;
+    }
+
+    .login-container {
+        grid-template-columns: 1fr;
+        margin: 0;
+        border-radius: 0;
+        min-height: 100vh;
+        box-shadow: none;
+    }
+
+    .login-branding {
+        display: none;
+    }
+
+    .login-form-container {
+        padding: 2rem 1.5rem;
+    }
+}
+
+
+
+

@@ -7,6 +7,7 @@
 
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
 <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css" rel="stylesheet" />
+<link href="~/css/paginacion.css" rel="stylesheet" />
 
 <style>
     :root {
@@ -79,6 +80,80 @@
             transform: translateY(-2px);
             box-shadow: 0 4px 8px rgba(92, 77, 255, 0.2);
         }
+
+    .btn-report {
+        background-color: #28a745;
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 20px;
+        text-decoration: none;
+        font-weight: 500;
+        transition: all 0.3s ease;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+        .btn-report:hover {
+            background-color: #218838;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(40, 167, 69, 0.2);
+        }
+
+    .dropdown-container {
+        position: relative;
+        display: inline-block;
+    }
+
+    .dropdown-menu {
+        display: none;
+        position: absolute;
+        top: 100%;
+        left: 0;
+        z-index: 10;
+        min-width: 200px;
+        background-color: white;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        padding: 8px 0;
+        animation: fadeIn 0.3s ease-in-out;
+    }
+
+    .dropdown-menu a {
+        color: var(--text-color);
+        padding: 12px 16px;
+        text-decoration: none;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        transition: background-color 0.2s ease, color 0.2s ease;
+    }
+
+    .dropdown-menu a:hover {
+        background-color: var(--row-hover);
+        color: var(--primary-color);
+    }
+
+    .dropdown-menu a i {
+        font-size: 16px;
+    }
+
+    .dropdown-menu.show {
+        display: block;
+    }
+
+    @@keyframes fadeIn {
+        from {
+            opacity: 0;
+            transform: translateY(-10px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
 
     .input-search {
         position: relative;
@@ -223,6 +298,11 @@
         transform: scale(1.1);
     }
 
+    .icon-return:hover {
+        color: #28a745;
+        transform: scale(1.1);
+    }
+
     .table-footer {
         margin-top: 20px;
         text-align: right;
@@ -250,10 +330,9 @@
         color: #c62828;
     }
 
-    /* Estilos para el sistema de alertas */
     .alert-container {
         position: fixed;
-        top: 80px; /* Ajustado para que no se solape con la navbar */
+        top: 80px;
         right: 20px;
         z-index: 1000;
         max-width: 350px;
@@ -354,7 +433,6 @@
         animation: progressBar 5s linear forwards;
     }
 
-    /* Animaciones */
     @@keyframes slideInRight {
         to {
             transform: translateX(0);
@@ -372,7 +450,6 @@
         }
     }
 
-    /* Efecto al cerrar */
     .alert.hide {
         animation: slideOutRight 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55) forwards;
     }
@@ -389,7 +466,20 @@
         }
     }
 
-    /* Responsive adjustments */
+    .text-muted {
+        color: #6c757d !important;
+        font-style: italic;
+    }
+
+    .inspeccion-info {
+        font-size: 12px;
+        line-height: 1.3;
+    }
+
+    .inspeccion-info small {
+        display: block;
+    }
+
     @@media (max-width: 768px) {
         .table-header {
             flex-direction: column;
@@ -422,9 +512,24 @@
     <div class="custom-container">
         <div class="table-header">
             <h2>Rentas Registradas</h2>
-            <a asp-action="Create" class="btn-purple">
-                <i class="bi bi-plus-lg"></i> NUEVA RENTA
-            </a>
+            <div style="display: flex; gap: 15px; flex-wrap: wrap;">
+                <a asp-action="Create" class="btn-purple">
+                    <i class="bi bi-plus-lg"></i> NUEVA RENTA
+                </a>
+                <div class="dropdown-container">
+                    <button class="btn-report" id="report-dropdown-btn" type="button">
+                        <i class="bi bi-file-earmark-pdf"></i> GENERAR REPORTE PDF
+                    </button>
+                    <div class="dropdown-menu" id="report-dropdown-menu">
+                        <a href="@Url.Action("GeneratePdfReport", "Rentas", new { searchString = ViewData["SearchString"], download = true })" target="_blank">
+                            <i class="bi bi-download"></i> Descargar PDF
+                        </a>
+                        <a href="@Url.Action("GeneratePdfReport", "Rentas", new { searchString = ViewData["SearchString"], download = false })" target="_blank">
+                            <i class="bi bi-printer"></i> Imprimir PDF
+                        </a>
+                    </div>
+                </div>
+            </div>
             <form asp-controller="Rentas" asp-action="Index" method="get" class="input-search">
                 <input type="search" name="searchString" placeholder="Buscar por cliente..." value="@Context.Request.Query["searchString"]" />
                 <button type="submit">
@@ -445,7 +550,6 @@
                     <th>Días</th>
                     <th>Comentario</th>
                     <th>Estado</th>
-                    <th>Inspección</th>
                     <th>Acciones</th>
                 </tr>
             </thead>
@@ -466,7 +570,6 @@
                                 @(item.Estado ? "Activo" : "Inactivo")
                             </span>
                         </td>
-                        <td>@item.Inspeccion?.Id</td>
                         <td class="operations-cell">
                             <a asp-action="Edit" asp-route-id="@item.Id" title="Editar">
                                 <i class="bi bi-pencil-square icon icon-edit"></i>
@@ -477,11 +580,77 @@
                             <a asp-action="Delete" asp-route-id="@item.Id" title="Eliminar">
                                 <i class="bi bi-trash icon icon-delete"></i>
                             </a>
+                            @if (item.Estado)
+                            {
+                                <a asp-action="Devolver" asp-route-id="@item.Id" title="Devolver Renta">
+                                    <i class="bi bi-arrow-return-left icon icon-return"></i>
+                                </a>
+                            }
                         </td>
                     </tr>
                 }
             </tbody>
         </table>
+
+        <div class="pagination-container">
+            <div class="pagination-info">
+                Mostrando página @ViewData["CurrentPage"] de @ViewData["TotalPages"] - @Model.Count() registros
+            </div>
+
+            <ul class="pagination">
+                <li class="page-item @((int)ViewData["CurrentPage"] == 1 ? "disabled" : "")">
+                    <a class="page-link" href="@Url.Action("Index", new { pageNumber = (int)ViewData["CurrentPage"] - 1, searchString = ViewData["SearchString"] })">
+                        <i class="bi bi-chevron-left"></i>
+                    </a>
+                </li>
+
+                @{
+                    int currentPage = (int)ViewData["CurrentPage"];
+                    int totalPages = (int)ViewData["TotalPages"];
+                    int startPage = Math.Max(1, currentPage - 2);
+                    int endPage = Math.Min(totalPages, currentPage + 2);
+
+                    if (startPage > 1)
+                    {
+                        <li class="page-item">
+                            <a class="page-link" href="@Url.Action("Index", new { pageNumber = 1, searchString = ViewData["SearchString"] })">1</a>
+                        </li>
+                        if (startPage > 2)
+                        {
+                            <li class="page-item disabled">
+                                <span class="page-link">...</span>
+                            </li>
+                        }
+                    }
+
+                    for (int i = startPage; i <= endPage; i++)
+                    {
+                        <li class="page-item @(i == currentPage ? "active" : "")">
+                            <a class="page-link" href="@Url.Action("Index", new { pageNumber = i, searchString = ViewData["SearchString"] })">@i</a>
+                        </li>
+                    }
+
+                    if (endPage < totalPages)
+                    {
+                        if (endPage < totalPages - 1)
+                        {
+                            <li class="page-item disabled">
+                                <span class="page-link">...</span>
+                            </li>
+                        }
+                        <li class="page-item">
+                            <a class="page-link" href="@Url.Action("Index", new { pageNumber = totalPages, searchString = ViewData["SearchString"] })">@totalPages</a>
+                        </li>
+                    }
+                }
+
+                <li class="page-item @((int)ViewData["CurrentPage"] == (int)ViewData["TotalPages"] ? "disabled" : "")">
+                    <a class="page-link" href="@Url.Action("Index", new { pageNumber = (int)ViewData["CurrentPage"] + 1, searchString = ViewData["SearchString"] })">
+                        <i class="bi bi-chevron-right"></i>
+                    </a>
+                </li>
+            </ul>
+        </div>
 
         <div class="table-footer">
             <p>Total de rentas: @Model.Count()</p>
@@ -489,7 +658,6 @@
     </div>
 </div>
 
-<!-- Sistema de alertas mejorado -->
 <div class="alert-container">
     @if (TempData["SuccessMessage"] != null)
     {
@@ -554,26 +722,39 @@
         }
 
         document.addEventListener('DOMContentLoaded', function () {
-            // Animación para el contenedor principal
             const container = document.querySelector('.custom-container');
             if (container) {
                 container.style.animation = 'slideUp 0.6s ease-out 0.2s forwards';
             }
 
-            // Animación para las filas de la tabla
             const rows = document.querySelectorAll('.styled-table tbody tr');
             rows.forEach((row, index) => {
                 row.style.animationDelay = `${0.3 + (index * 0.1)}s`;
                 row.style.animation = 'fadeInRow 0.4s ease-out forwards';
             });
 
-            // Animación para el footer
             const footer = document.querySelector('.table-footer');
             if (footer) {
                 footer.style.animation = 'fadeIn 0.5s ease-out 0.8s forwards';
             }
 
-            // Auto-dismiss alerts after 5 seconds
+            const dropdownBtn = document.getElementById('report-dropdown-btn');
+            const dropdownMenu = document.getElementById('report-dropdown-menu');
+            const dropdownContainer = document.querySelector('.dropdown-container');
+
+            if (dropdownBtn && dropdownMenu) {
+                dropdownBtn.addEventListener('click', function (e) {
+                    e.stopPropagation();
+                    dropdownMenu.classList.toggle('show');
+                });
+
+                window.addEventListener('click', function (e) {
+                    if (!dropdownContainer.contains(e.target)) {
+                        dropdownMenu.classList.remove('show');
+                    }
+                });
+            }
+
             const alerts = document.querySelectorAll('.alert');
             alerts.forEach(alert => {
                 setTimeout(() => {

@@ -14,7 +14,6 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600;700&display=swap" rel="stylesheet" />
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css" rel="stylesheet" />
     <style>
-        /* Estilos generales */
         * {
             margin: 0;
             padding: 0;
@@ -62,7 +61,7 @@
             background: #fff;
             padding: 40px;
             border-radius: 16px;
-            box-shadow: 0 5px 25px rgba(0,0,0,0.35);
+            box-shadow: 0 5px 25px rgba(0, 0, 0, 0.35);
             opacity: 0;
             transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
@@ -97,28 +96,39 @@
             animation: fadeIn 0.5s ease 0.3s forwards;
         }
 
-        .input_box {
+        .input_container {
             position: relative;
             margin-top: 30px;
-            width: 100%;
-            height: 50px;
             opacity: 0;
             transform: translateY(20px);
             transition: all 0.4s ease;
         }
 
-            .input_box:nth-child(1) {
+            .input_container:nth-child(1) {
                 transition-delay: 0.4s;
             }
-            /* Adjusted for the new toggle switch structure */
-            .input_box:nth-child(2) {
+
+            .input_container:nth-child(2) {
                 transition-delay: 0.5s;
             }
 
-
-        .form_container.active .input_box {
+        .form_container.active .input_container {
             opacity: 1;
             transform: translateY(0);
+        }
+
+        .input_label {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 14px;
+            color: #555;
+            font-weight: 500;
+        }
+
+        .input_box {
+            position: relative;
+            width: 100%;
+            height: 50px;
         }
 
         .input_box input {
@@ -130,6 +140,7 @@
             font-size: 16px;
             border-bottom: 2px solid #aaaaaa;
             transition: border-color 0.3s ease;
+            background: transparent;
         }
 
             .input_box input:focus {
@@ -160,7 +171,7 @@
             color: #0b0217;
             opacity: 0;
             transform: translateY(20px);
-            transition: all 0.4s ease 0.6s; /* Adjusted transition delay for this element */
+            transition: all 0.4s ease 0.6s;
         }
 
         .form_container.active .toggle_switch_container {
@@ -171,8 +182,8 @@
         .switch {
             position: relative;
             display: inline-block;
-            width: 48px; /* Width of the switch */
-            height: 28px; /* Height of the switch */
+            width: 48px;
+            height: 28px;
         }
 
             .switch input {
@@ -221,42 +232,50 @@
             cursor: pointer;
         }
 
-        .form_container .button {
-            font-size: 16px;
-            background: #7d2ae8;
-            color: #fff;
+        .action_buttons {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
             margin-top: 40px;
-            width: 100%;
-            padding: 15px 0;
-            border: none;
-            border-radius: 12px;
-            cursor: pointer;
-            transition: background 0.3s, transform 0.2s;
             opacity: 0;
-            transform: translateY(20px);
-            transition: all 0.4s ease 0.7s; /* Adjusted transition delay for the button */
+            transition: opacity 0.3s ease 0.7s;
         }
 
-        .form_container.active .button {
+        .form_container.active .action_buttons {
             opacity: 1;
-            transform: translateY(0);
         }
 
-        .form_container .button:hover {
+        .btn_submit, .btn_back {
+            padding: 12px 25px;
+            border-radius: 8px;
+            font-weight: 500;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            text-align: center;
+            display: inline-block;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        .btn_submit {
+            background: #7d2ae8;
+            color: white;
+        }
+
+        .btn_submit:hover {
             background: #6825c1;
             transform: translateY(-2px);
         }
 
-        .login_signup {
-            font-size: 12px;
-            text-align: center;
-            margin-top: 25px;
-            opacity: 0;
-            transition: opacity 0.4s ease 0.8s; /* Adjusted transition delay for login_signup */
+        .btn_back {
+            background: #f1f1f1;
+            color: #333;
         }
 
-        .form_container.active .login_signup {
-            opacity: 1;
+        .btn_back:hover {
+            background: #ddd;
+            transform: translateY(-2px);
         }
 
         .text-danger {
@@ -281,7 +300,6 @@
             from {
                 opacity: 0;
             }
-
             to {
                 opacity: 1;
             }
@@ -292,10 +310,15 @@
                 transform: translateY(20px);
                 opacity: 0;
             }
-
             to {
                 transform: translateY(0);
                 opacity: 1;
+            }
+        }
+
+        @@media (max-width: 768px) {
+            .action_buttons {
+                flex-direction: column;
             }
         }
     </style>
@@ -309,36 +332,40 @@
             <form asp-action="Create">
                 <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
-                <div class="input_box">
-                    <input asp-for="Descripcion" placeholder="Descripción de la Marca" />
-                    <i class="bi bi-tag"></i>
+                <div class="input_container">
+                    <label class="input_label">Descripción de la Marca</label>
+                    <div class="input_box">
+                        <input asp-for="Descripcion" placeholder="Ingrese la descripción" />
+                        <i class="bi bi-tag"></i>
+                    </div>
                     <span asp-validation-for="Descripcion" class="text-danger"></span>
                 </div>
 
                 <div class="toggle_switch_container">
+                    <label for="Estado" class="toggle_label">Estado Activo</label>
                     <label class="switch">
-                        <input asp-for="Estado" type="checkbox" id="estadoToggle" />
+                        <input asp-for="Estado" type="checkbox" id="Estado" checked="@Model?.Estado" />
                         <span class="slider round"></span>
                     </label>
-                    <label for="estadoToggle" class="toggle_label">Activo</label>
                 </div>
 
-                <button type="submit" class="button">Registrar</button>
-
-                <div class="login_signup">
-                    <a asp-action="Index">← Volver a la lista</a>
+                <div class="action_buttons">
+                    <button type="submit" class="btn_submit">
+                        <i class="bi bi-tag"></i> Registrar Marca
+                    </button>
+                    <a asp-action="Index" class="btn_back">
+                        <i class="bi bi-arrow-left"></i> Volver a la lista
+                    </a>
                 </div>
             </form>
         </div>
     </div>
 
     <script>
-        // Activar animaciones al cargar la página
         document.addEventListener('DOMContentLoaded', function() {
             const home = document.getElementById('home');
             const formContainer = document.getElementById('formContainer');
 
-            // Pequeño retraso para asegurar que el DOM está listo
             setTimeout(() => {
                 home.classList.add('active');
                 formContainer.classList.add('active');

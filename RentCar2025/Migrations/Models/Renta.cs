@@ -9,13 +9,14 @@
         public Vehiculo? Vehiculo { get; set; }
         public int ClienteId { get; set; }
         public Cliente? Cliente { get; set; }
+
+
         public DateTime? FechaRenta { get; set; }
         public DateTime? FechaDevolucion { get; set; }
         public decimal MontoPorDia { get; set; }
         public int CantidadDias { get; set; }
         public string? Comentario { get; set; }
         public bool Estado { get; set; } // Activa/Devuelta
-        public int? InspeccionId { get; set; }
-        public Inspeccion? Inspeccion { get; set; }
+      
     }
 }

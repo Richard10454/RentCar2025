@@ -1,0 +1,118 @@
+﻿@{
+    ViewData["Title"] = "Iniciar Sesión";
+    Layout = "_LayoutLogin";
+}
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css" rel="stylesheet">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" rel="stylesheet">
+<link rel="stylesheet" href="~/css/Index.css" />
+<link rel="stylesheet" href="~/css/login.css" />
+
+
+
+
+<div class="login-container animate__animated animate__fadeIn">
+    <div class="login-branding">
+        <div class="branding-content">
+            <h1 class="display-4 fw-bold mb-3 animate__animated animate__fadeInDown" style="animation-delay: 0.2s;">Bienvenido a <span class="text-highlight">RentCar</span></h1>
+            <p class="lead mb-4 animate__animated animate__fadeInUp" style="animation-delay: 0.4s;">Tu solución completa para la gestión de vehículos.</p>
+        </div>
+        <div class="hero-shapes">
+            <div class="shape shape-1"></div>
+            <div class="shape shape-2"></div>
+            <div class="shape shape-3"></div>
+        </div>
+    </div>
+
+    <div class="login-form-container">
+        <div class="form-wrapper">
+            <div class="form-header text-center mb-5">
+                <h2 class="fw-bold mb-2 animate__animated animate__fadeIn" style="animation-delay: 0.6s;">Iniciar Sesión</h2>
+                <p class="text-muted animate__animated animate__fadeIn" style="animation-delay: 0.7s;">Ingresa tus credenciales para continuar.</p>
+            </div>
+
+            <form asp-action="Login" method="post" class="needs-validation" novalidate>
+
+                <div asp-validation-summary="ModelOnly"
+                     class="alert alert-danger custom-alert animate__animated animate__shakeX"
+                     role="alert">
+                </div>
+
+                <div class="form-floating-group animate__animated animate__fadeInUp" style="animation-delay: 0.8s;">
+                    <input type="email" class="form-control" id="correo" name="correo" placeholder=" " required />
+                    <label for="correo"><i class="bi bi-envelope-fill me-2"></i>Correo Electrónico</label>
+                    <div class="invalid-feedback">Por favor ingrese un correo válido.</div>
+                </div>
+
+                <div class="form-floating-group animate__animated animate__fadeInUp" style="animation-delay: 0.9s;">
+                    <div class="input-group">
+                        <input type="password" class="form-control" id="contrasena" name="contrasena" placeholder=" " required />
+                        <label for="contrasena"><i class="bi bi-lock-fill me-2"></i>Contraseña</label>
+                        <button class="btn btn-outline-secondary toggle-password" type="button">
+                            <i class="bi bi-eye-fill"></i>
+                        </button>
+                    </div>
+                    <div class="invalid-feedback">Por favor ingrese su contraseña.</div>
+                </div>
+
+                <div class="d-flex justify-content-between align-items-center mb-4 animate__animated animate__fadeIn" style="animation-delay: 1.0s;">
+                    <div class="form-check">
+                        <input type="checkbox" class="form-check-input" id="rememberMe">
+                        <label class="form-check-label" for="rememberMe">Recordarme</label>
+                    </div>
+                    <a href="#" class="text-decoration-none small">¿Olvidaste tu contraseña?</a>
+                </div>
+
+                <div class="d-grid gap-3 animate__animated animate__fadeIn" style="animation-delay: 1.1s;">
+                    <button type="submit" class="btn btn-primary btn-lg">
+                        <i class="bi bi-box-arrow-in-right me-2"></i>Iniciar Sesión
+                    </button>
+                </div>
+
+                <div class="divider-text my-4 animate__animated animate__fadeIn" style="animation-delay: 1.2s;"><span>o inicia sesión con</span></div>
+
+                <div class="d-grid gap-3 social-login animate__animated animate__fadeIn" style="animation-delay: 1.3s;">
+                    <a href="#" class="btn btn-social btn-google">
+                        <i class="bi bi-google"></i>Continuar con Google
+                    </a>
+                    <a asp-action="Create" class="text-center mt-3 text-decoration-none">
+                        ¿No tienes cuenta? <span class="fw-bold">Regístrate aquí</span>
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+
+    <script>
+        document.querySelectorAll('.toggle-password').forEach(button => {
+            button.addEventListener('click', function () {
+                const input = this.parentElement.querySelector('input');
+                const type = input.getAttribute('type') === 'password' ? 'text' : 'password';
+                input.setAttribute('type', type);
+                this.querySelector('i').classList.toggle('bi-eye-fill');
+                this.querySelector('i').classList.toggle('bi-eye-slash-fill');
+            });
+        });
+
+        (function () {
+            'use strict'
+            const forms = document.querySelectorAll('.needs-validation')
+            Array.from(forms).forEach(form => {
+                form.addEventListener('submit', event => {
+                    if (!form.checkValidity()) {
+                        event.preventDefault()
+                        event.stopPropagation()
+                    }
+                    form.classList.add('was-validated')
+                }, false)
+            })
+        })()
+    </script>
+}

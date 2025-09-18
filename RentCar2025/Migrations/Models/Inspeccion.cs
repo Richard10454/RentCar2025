@@ -12,10 +12,14 @@
         public bool TieneGomaRespuesta { get; set; }
         public bool TieneGato { get; set; }
         public bool TieneRoturasCristal { get; set; }
-        public string? EstadoGomas { get; set; }  // Estado de las 4 gomas
+        public bool EstadoGomas { get; set; } 
+        public bool EstadoGomas2 { get; set; } 
+        public bool EstadoGomas3 { get; set; } 
+        public bool EstadoGomas4 { get; set; } 
         public DateTime Fecha { get; set; }
         public int EmpleadoId { get; set; }
         public Empleado? Empleado { get; set; }
         public bool Estado { get; set; }
+
     }
 }
