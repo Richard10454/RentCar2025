@@ -104,29 +104,8 @@
             grid-template-columns: 1fr 1fr;
             gap: 20px 30px;
         }
-
-        .form-grid.inspeccion-section {
-            grid-column: 1 / -1;
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 20px 30px;
-            margin-bottom: 20px;
-        }
         
-        .form-grid.inspeccion-section .input_container {
-            grid-column: span 2;
-        }
-        
-        .form-grid.inspeccion-section .input_container:nth-child(2) {
-            grid-column: span 2;
-        }
-        .form-grid.inspeccion-section .input_container:nth-child(3) {
-            grid-column: span 2;
-        }
-        .form-grid.inspeccion-section .input_container:nth-child(4) {
-            grid-column: span 2;
-        }
-
+        /* Removed .form-grid.inspeccion-section rules */
 
         .input_container {
             position: relative;
@@ -138,14 +117,13 @@
         .form_container.active .input_container:nth-child(1) { transition-delay: 0.3s; }
         .form_container.active .input_container:nth-child(2) { transition-delay: 0.35s; }
         .form_container.active .input_container:nth-child(3) { transition-delay: 0.4s; }
-        .form_container.active .input_container:nth-child(4) { transition-delay: 0.45s; }
-        .form_container.active .input_container:nth-child(5) { transition-delay: 0.5s; }
-        .form_container.active .input_container:nth-child(6) { transition-delay: 0.55s; }
-        .form_container.active .input_container:nth-child(7) { transition-delay: 0.6s; }
-        .form_container.active .input_container:nth-child(8) { transition-delay: 0.65s; }
-        /* Add transition delays for new fields */
-        .form_container.active .input_container:nth-child(9) { transition-delay: 0.7s; }
-        .form_container.active .input_container:nth-child(10) { transition-delay: 0.75s; }
+        /* Removed transition delay for Inspeccion (was 4th child) */
+        .form_container.active .input_container:nth-child(4) { transition-delay: 0.45s; } /* FechaRenta is now 4th */
+        .form_container.active .input_container:nth-child(5) { transition-delay: 0.5s; } /* FechaDevolucion is now 5th */
+        .form_container.active .input_container:nth-child(6) { transition-delay: 0.55s; } /* MontoPorDia is now 6th */
+        .form_container.active .input_container:nth-child(7) { transition-delay: 0.6s; } /* CantidadDias is now 7th */
+        .form_container.active .input_container:nth-child(8) { transition-delay: 0.65s; } /* Comentario is now 8th */
+        /* Removed placeholder transition delays (was 9 and 10) */
 
         .form_container.active .input_container {
             opacity: 1;
@@ -218,60 +196,6 @@
             color: #7d2ae8;
         }
         
-        /* Estilos específicos para la sección de inspección */
-        .inspeccion-title {
-            grid-column: 1 / -1;
-            text-align: center;
-            font-size: 18px;
-            font-weight: 600;
-            margin: 20px 0;
-            color: #0b0217;
-        }
-
-        .checkbox-group {
-            display: flex;
-            flex-direction: column;
-            align-items: flex-start;
-            margin-top: 10px;
-        }
-
-        .checkbox-container {
-            display: flex;
-            align-items: center;
-            margin-bottom: 5px;
-            cursor: pointer;
-        }
-
-        .checkbox-container input[type="checkbox"] {
-            -webkit-appearance: none;
-            -moz-appearance: none;
-            appearance: none;
-            height: 20px;
-            width: 20px;
-            border: 2px solid #ccc;
-            border-radius: 4px;
-            outline: none;
-            cursor: pointer;
-            position: relative;
-            transition: all 0.2s ease;
-            margin-right: 10px;
-        }
-        
-        .checkbox-container input[type="checkbox"]:checked {
-            background-color: #7d2ae8;
-            border-color: #7d2ae8;
-        }
-
-        .checkbox-container input[type="checkbox"]:checked::after {
-            content: "\f269"; /* bi-check-lg */
-            font-family: "bootstrap-icons";
-            color: white;
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            font-size: 12px;
-        }
 
         .toggle_switch_container {
             margin-top: 30px;
@@ -428,21 +352,6 @@
             .form-grid {
                 grid-template-columns: 1fr;
             }
-            .form-grid.inspeccion-section {
-                grid-template-columns: 1fr;
-            }
-            .form-grid.inspeccion-section .input_container {
-                grid-column: span 1;
-            }
-            .form-grid.inspeccion-section .input_container:nth-child(2) {
-                grid-column: span 1;
-            }
-            .form-grid.inspeccion-section .input_container:nth-child(3) {
-                grid-column: span 1;
-            }
-            .form-grid.inspeccion-section .input_container:nth-child(4) {
-                grid-column: span 1;
-            }
             .form_container {
                 max-width: 95%;
                 padding: 25px;
@@ -515,7 +424,7 @@
                         <span asp-validation-for="ClienteId" class="text-danger"></span>
                     </div>
                     
-                    <div class="input_container">
+                    @* <div class="input_container">
                         <label class="input_label">Inspección</label>
                         <div class="input_box">
                             <select asp-for="InspeccionId" asp-items="ViewBag.InspeccionId">
@@ -524,7 +433,8 @@
                             <i class="bi bi-card-checklist"></i>
                         </div>
                         <span asp-validation-for="InspeccionId" class="text-danger"></span>
-                    </div>
+                    </div> *@
+                    
                     <div class="input_container">
                         <label class="input_label">Fecha de Renta</label>
                         <div class="input_box">
@@ -593,17 +503,83 @@
         </div>
     </div>
 
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const home = document.getElementById('home');
-            const formContainer = document.getElementById('formContainer');
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const home = document.getElementById('home');
+        const formContainer = document.getElementById('formContainer');
+        const form = document.querySelector('form[asp-action="Create"]');
+        const fechaRentaInput = document.querySelector('input[name="FechaRenta"]');
+        const fechaDevolucionInput = document.querySelector('input[name="FechaDevolucion"]');
+        const cantidadDiasInput = document.querySelector('input[name="CantidadDias"]');
+        const fechaRentaErrorSpan = document.querySelector('span[data-valmsg-for="FechaRenta"]');
+        const fechaDevolucionErrorSpan = document.querySelector('span[data-valmsg-for="FechaDevolucion"]');
+        const submitButton = document.querySelector('.btn_submit'); 
 
-            setTimeout(() => {
-                home.classList.add('active');
-                formContainer.classList.add('active');
-            }, 50);
+        function clearError(span) {
+            if (span) {
+                span.textContent = "";
+            }
+        }
+
+        setTimeout(() => {
+            home.classList.add('active');
+            formContainer.classList.add('active');
+            calcularDias(); 
+        }, 50);
+
+        function calcularDias() {
+            const fechaRenta = new Date(fechaRentaInput.value);
+            const fechaDevolucion = new Date(fechaDevolucionInput.value);
+            let isValid = true;
+            
+            clearError(fechaRentaErrorSpan);
+            clearError(fechaDevolucionErrorSpan);
+            
+            if (isNaN(fechaRenta) || !fechaRentaInput.value || isNaN(fechaDevolucion) || !fechaDevolucionInput.value) {
+                cantidadDiasInput.value = "";
+           
+                isValid = true; 
+            } else if (fechaRenta > fechaDevolucion) {
+                if (fechaRentaErrorSpan) {
+                    fechaRentaErrorSpan.textContent = "La fecha de renta no puede ser posterior a la de devolución.";
+                } else if (fechaDevolucionErrorSpan) {
+                    fechaDevolucionErrorSpan.textContent = "La fecha de devolución no puede ser anterior a la de renta.";
+                }
+                cantidadDiasInput.value = "";
+                isValid = false; 
+            } else {
+                const diferenciaMs = fechaDevolucion - fechaRenta;
+                const dias = Math.ceil(diferenciaMs / (1000 * 60 * 60 * 24)); 
+                cantidadDiasInput.value = dias;
+                isValid = true; 
+            }
+
+            if (submitButton) {
+                submitButton.disabled = !isValid; 
+                if (!isValid) {
+                    submitButton.style.opacity = '0.6';
+                    submitButton.style.cursor = 'not-allowed';
+                } else {
+                    submitButton.style.opacity = '1';
+                    submitButton.style.cursor = 'pointer';
+                }
+            }
+            
+            return isValid;
+        }
+
+        fechaRentaInput.addEventListener("change", calcularDias);
+        fechaDevolucionInput.addEventListener("change", calcularDias);
+        
+        form.addEventListener('submit', function(event) {
+            if (!calcularDias()) {
+                event.preventDefault(); 
+                fechaRentaInput.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }
         });
-    </script>
+    });
+</script>
+
 
     @section Scripts {
         @{

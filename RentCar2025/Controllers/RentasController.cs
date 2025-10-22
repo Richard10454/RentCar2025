@@ -31,7 +31,7 @@ namespace RentCar2025.Controllers
                 .Include(r => r.Cliente)
                 .Include(r => r.Empleado)
                 .Include(r => r.Vehiculo)
-                .Include(r => r.Inspeccion)
+                // .Include(r => r.Inspeccion) // ELIMINADO
                 .AsQueryable();
 
             if (!string.IsNullOrEmpty(searchString))
@@ -39,8 +39,9 @@ namespace RentCar2025.Controllers
                 rentas = rentas.Where(r =>
                     r.Cliente.Nombre.Contains(searchString) ||
                     r.Empleado.Nombre.Contains(searchString) ||
-                    r.Vehiculo.Descripcion.Contains(searchString) ||
-                    r.Inspeccion.Id.ToString().Contains(searchString));
+                    r.Vehiculo.Descripcion.Contains(searchString)
+                // || r.Inspeccion.Id.ToString().Contains(searchString) // ELIMINADO
+                );
             }
 
             int totalRentas = await rentas.CountAsync();
@@ -70,7 +71,7 @@ namespace RentCar2025.Controllers
                 .Include(r => r.Cliente)
                 .Include(r => r.Empleado)
                 .Include(r => r.Vehiculo)
-                .Include(r => r.Inspeccion)
+                // .Include(r => r.Inspeccion) // ELIMINADO
                 .FirstOrDefaultAsync(m => m.Id == id);
 
             if (renta == null)
@@ -88,29 +89,20 @@ namespace RentCar2025.Controllers
             ViewData["EmpleadoId"] = new SelectList(_context.Empleados.Where(e => e.Estado), "Id", "Nombre");
             ViewData["VehiculoId"] = new SelectList(_context.Vehiculos.Where(v => v.Estado), "Id", "Descripcion");
 
-            var inspeccionesDisponibles = _context.Inspecciones
-                .Include(i => i.Vehiculo)
-                .Where(i => i.Estado && i.Vehiculo.Estado)
-                .Select(i => new
-                {
-                    i.Id,
-                    DisplayText = $"Inspección #{i.Id} - {i.Vehiculo.Descripcion}"
-                });
+            // ELIMINADO: Lógica y ViewData para InspeccionId
+            // ViewData["InspeccionId"] = ...
 
-            ViewData["InspeccionId"] = new SelectList(inspeccionesDisponibles, "Id", "DisplayText");
             return View();
         }
 
         // POST: Rentas/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,EmpleadoId,VehiculoId,ClienteId,InspeccionId,FechaRenta,FechaDevolucion,MontoPorDia,CantidadDias,Comentario,Estado")] Renta renta)
+        public async Task<IActionResult> Create([Bind("Id,EmpleadoId,VehiculoId,ClienteId,FechaRenta,FechaDevolucion,MontoPorDia,CantidadDias,Comentario,Estado")] Renta renta)
         {
             var vehiculo = await _context.Vehiculos.FindAsync(renta.VehiculoId);
             var empleado = await _context.Empleados.FindAsync(renta.EmpleadoId);
-            var inspeccion = await _context.Inspecciones
-                .Include(i => i.Vehiculo)
-                .FirstOrDefaultAsync(i => i.Id == renta.InspeccionId);
+            // var inspeccion = ... // ELIMINADO
 
             if (vehiculo == null || !vehiculo.Estado)
             {
@@ -120,14 +112,10 @@ namespace RentCar2025.Controllers
             {
                 ModelState.AddModelError("EmpleadoId", "El empleado seleccionado no está activo.");
             }
-            if (inspeccion == null || !inspeccion.Estado)
-            {
-                ModelState.AddModelError("InspeccionId", "La inspección seleccionada no es válida o no está disponible.");
-            }
-            if (inspeccion != null && inspeccion.VehiculoId != renta.VehiculoId)
-            {
-                ModelState.AddModelError("InspeccionId", "La inspección seleccionada no corresponde al vehículo elegido.");
-            }
+            // ELIMINADO: Validación de Inspección
+            // if (inspeccion == null || !inspeccion.Estado) { ... }
+            // if (inspeccion != null && inspeccion.VehiculoId != renta.VehiculoId) { ... }
+
 
             if (ModelState.IsValid)
             {
@@ -139,8 +127,9 @@ namespace RentCar2025.Controllers
                     vehiculo.Estado = false;
                     _context.Update(vehiculo);
 
-                    inspeccion.Estado = false;
-                    _context.Update(inspeccion);
+                    // ELIMINADO: Actualización de estado de Inspeccion
+                    // inspeccion.Estado = false;
+                    // _context.Update(inspeccion);
 
                     _context.Add(renta);
                     await _context.SaveChangesAsync();
@@ -162,12 +151,15 @@ namespace RentCar2025.Controllers
                 "Descripcion",
                 renta.VehiculoId
             );
+            // ELIMINADO: ViewData para InspeccionId
+            /*
             ViewData["InspeccionId"] = new SelectList(
                 _context.Inspecciones.Where(i => (i.Estado && i.Vehiculo.Estado) || i.Id == renta.InspeccionId),
                 "Id",
                 "Id",
                 renta.InspeccionId
             );
+            */
 
             return View(renta);
         }
@@ -182,7 +174,7 @@ namespace RentCar2025.Controllers
 
             var renta = await _context.Rentas
                 .Include(r => r.Vehiculo)
-                .Include(r => r.Inspeccion)
+                // .Include(r => r.Inspeccion) // ELIMINADO
                 .FirstOrDefaultAsync(m => m.Id == id);
 
             if (renta == null)
@@ -199,19 +191,22 @@ namespace RentCar2025.Controllers
                 "Descripcion",
                 renta.VehiculoId
             );
+            // ELIMINADO: ViewData para InspeccionId
+            /*
             ViewData["InspeccionId"] = new SelectList(
                 _context.Inspecciones.Where(i => (i.Estado && i.Vehiculo.Estado) || i.Id == renta.InspeccionId),
                 "Id",
                 "Id",
                 renta.InspeccionId
             );
+            */
             return View(renta);
         }
 
         // POST: Rentas/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,EmpleadoId,VehiculoId,ClienteId,InspeccionId,FechaRenta,FechaDevolucion,MontoPorDia,CantidadDias,Comentario,Estado")] Renta renta)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,EmpleadoId,VehiculoId,ClienteId,FechaRenta,FechaDevolucion,MontoPorDia,CantidadDias,Comentario,Estado")] Renta renta)
         {
             if (id != renta.Id)
             {
@@ -220,7 +215,7 @@ namespace RentCar2025.Controllers
 
             var rentaOriginal = await _context.Rentas
                 .Include(r => r.Vehiculo)
-                .Include(r => r.Inspeccion)
+                // .Include(r => r.Inspeccion) // ELIMINADO
                 .AsNoTracking()
                 .FirstOrDefaultAsync(m => m.Id == id);
 
@@ -235,10 +230,9 @@ namespace RentCar2025.Controllers
                 return RedirectToAction(nameof(Index));
             }
 
-            var nuevaInspeccion = await _context.Inspecciones
-                .Include(i => i.Vehiculo)
-                .FirstOrDefaultAsync(i => i.Id == renta.InspeccionId);
-
+            // var nuevaInspeccion = ... // ELIMINADO
+            // ELIMINADO: Validación de Inspeccion
+            /*
             if (nuevaInspeccion == null || (!nuevaInspeccion.Estado && nuevaInspeccion.Id != rentaOriginal.InspeccionId))
             {
                 ModelState.AddModelError("InspeccionId", "La inspección seleccionada no es válida.");
@@ -247,6 +241,8 @@ namespace RentCar2025.Controllers
             {
                 ModelState.AddModelError("InspeccionId", "La inspección seleccionada no corresponde al vehículo elegido.");
             }
+            */
+
             var nuevoVehiculo = await _context.Vehiculos.FindAsync(renta.VehiculoId);
             if (nuevoVehiculo == null || (!nuevoVehiculo.Estado && nuevoVehiculo.Id != rentaOriginal.VehiculoId))
             {
@@ -278,6 +274,8 @@ namespace RentCar2025.Controllers
                         }
                     }
 
+                    // ELIMINADO: Lógica de cambio de Inspeccion
+                    /*
                     if (renta.InspeccionId != rentaOriginal.InspeccionId)
                     {
                         var inspeccionAnterior = await _context.Inspecciones.FindAsync(rentaOriginal.InspeccionId);
@@ -293,6 +291,7 @@ namespace RentCar2025.Controllers
                             _context.Update(nuevaInspeccion);
                         }
                     }
+                    */
 
                     _context.Update(renta);
                     await _context.SaveChangesAsync();
@@ -317,7 +316,8 @@ namespace RentCar2025.Controllers
                 }
             }
 
-            ViewData["IsRented"] = !renta.Vehiculo.Estado;
+            // ELIMINADO: ViewData.IsRented
+            // ViewData["IsRented"] = !renta.Vehiculo.Estado;
             ViewData["ClienteId"] = new SelectList(_context.Clientes.Where(c => c.Estado), "Id", "Nombre", renta.ClienteId);
             ViewData["EmpleadoId"] = new SelectList(_context.Empleados.Where(e => e.Estado), "Id", "Nombre", renta.EmpleadoId);
             ViewData["VehiculoId"] = new SelectList(
@@ -326,12 +326,15 @@ namespace RentCar2025.Controllers
                 "Descripcion",
                 renta.VehiculoId
             );
+            // ELIMINADO: ViewData para InspeccionId
+            /*
             ViewData["InspeccionId"] = new SelectList(
                 _context.Inspecciones.Where(i => (i.Estado && i.Vehiculo.Estado) || i.Id == renta.InspeccionId),
                 "Id",
                 "Id",
                 renta.InspeccionId
             );
+            */
             return View(renta);
         }
 
@@ -346,7 +349,7 @@ namespace RentCar2025.Controllers
             var renta = await _context.Rentas
                 .Include(r => r.Cliente)
                 .Include(r => r.Vehiculo)
-                .Include(r => r.Inspeccion)
+                // .Include(r => r.Inspeccion) // ELIMINADO
                 .FirstOrDefaultAsync(m => m.Id == id);
 
             if (renta == null)
@@ -369,7 +372,7 @@ namespace RentCar2025.Controllers
         {
             var renta = await _context.Rentas
                 .Include(r => r.Vehiculo)
-                .Include(r => r.Inspeccion)
+                // .Include(r => r.Inspeccion) // ELIMINADO
                 .FirstOrDefaultAsync(r => r.Id == id);
 
             if (renta == null)
@@ -390,7 +393,7 @@ namespace RentCar2025.Controllers
 
                 if (renta.Vehiculo != null)
                 {
-                    renta.Vehiculo.Estado = true;
+                    renta.Vehiculo.Estado = true; // El vehículo vuelve a estar disponible
                     _context.Update(renta.Vehiculo);
                 }
 
@@ -417,7 +420,7 @@ namespace RentCar2025.Controllers
                     .Include(r => r.Empleado)
                     .Include(r => r.Vehiculo)
                     .ThenInclude(v => v.TipoVehiculo)
-                    .Include(r => r.Inspeccion)
+                    // .Include(r => r.Inspeccion) // ELIMINADO
                     .OrderByDescending(r => r.FechaRenta)
                     .ToListAsync();
 
@@ -445,11 +448,14 @@ namespace RentCar2025.Controllers
                         id = r.Empleado.Id,
                         nombre = r.Empleado.Nombre
                     },
+                    // ELIMINADO: Información de Inspeccion
+                    /*
                     inspeccion = new
                     {
                         id = r.Inspeccion?.Id,
                         tieneRalladuras = r.Inspeccion?.TieneRalladuras
                     },
+                    */
                     fechaRenta = r.FechaRenta,
                     fechaDevolucion = r.FechaDevolucion,
                     montoPorDia = r.MontoPorDia,
@@ -482,7 +488,7 @@ namespace RentCar2025.Controllers
                 .Include(r => r.Cliente)
                 .Include(r => r.Vehiculo)
                  .Include(r => r.Empleado)
-                .Include(r => r.Inspeccion)
+                // .Include(r => r.Inspeccion) // ELIMINADO
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (renta == null)
             {
@@ -491,6 +497,7 @@ namespace RentCar2025.Controllers
 
             return View(renta);
         }
+
         // POST: Rentas/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
@@ -498,8 +505,8 @@ namespace RentCar2025.Controllers
         {
             var renta = await _context.Rentas
                 .Include(r => r.Vehiculo)
-                .Include(r => r.Inspeccion)
-                .Include(r => r.Empleado) 
+                // .Include(r => r.Inspeccion) // ELIMINADO
+                .Include(r => r.Empleado)
                 .FirstOrDefaultAsync(m => m.Id == id);
 
             if (renta == null)
@@ -511,15 +518,18 @@ namespace RentCar2025.Controllers
             {
                 if (renta.Vehiculo != null)
                 {
-                    renta.Vehiculo.Estado = true;
+                    renta.Vehiculo.Estado = true; // Revertir el estado del vehículo a disponible
                     _context.Update(renta.Vehiculo);
                 }
 
+                // ELIMINADO: Lógica de Inspeccion
+                /*
                 if (renta.Inspeccion != null)
                 {
-                    renta.Inspeccion.Estado = true;
+                    renta.Inspeccion.Estado = true; 
                     _context.Update(renta.Inspeccion);
                 }
+                */
 
                 _context.Rentas.Remove(renta);
                 await _context.SaveChangesAsync();
@@ -546,7 +556,7 @@ namespace RentCar2025.Controllers
                 .Include(r => r.Cliente)
                 .Include(r => r.Empleado)
                 .Include(r => r.Vehiculo)
-                .Include(r => r.Inspeccion)
+                // .Include(r => r.Inspeccion) // ELIMINADO
                 .AsQueryable();
 
             if (!string.IsNullOrEmpty(searchString))
@@ -554,8 +564,9 @@ namespace RentCar2025.Controllers
                 rentas = rentas.Where(r =>
                     r.Cliente.Nombre.Contains(searchString) ||
                     r.Empleado.Nombre.Contains(searchString) ||
-                    r.Vehiculo.Descripcion.Contains(searchString) ||
-                    r.Inspeccion.Id.ToString().Contains(searchString));
+                    r.Vehiculo.Descripcion.Contains(searchString)
+                // || r.Inspeccion.Id.ToString().Contains(searchString) // ELIMINADO
+                );
             }
 
             var rentaList = await rentas.OrderBy(r => r.FechaRenta).ToListAsync();
@@ -584,13 +595,13 @@ namespace RentCar2025.Controllers
                             {
                                 table.ColumnsDefinition(columns =>
                                 {
-                                    columns.RelativeColumn(1);
-                                    columns.RelativeColumn(1);
-                                    columns.RelativeColumn(1);
-                                    columns.RelativeColumn(1);
-                                    columns.RelativeColumn(1);
-                                    columns.RelativeColumn(1);
-                                    columns.RelativeColumn(1);
+                                    columns.RelativeColumn(1.2f); // Fecha Renta
+                                    columns.RelativeColumn(1.8f); // Vehículo
+                                    columns.RelativeColumn(1.8f); // Cliente
+                                    columns.RelativeColumn(1.8f); // Empleado
+                                    // columns.RelativeColumn(1f); // Inspección - ELIMINADO
+                                    columns.RelativeColumn(1f);  // Monto Total
+                                    columns.RelativeColumn(0.8f); // Estado
                                 });
 
                                 table.Header(header =>
@@ -599,7 +610,7 @@ namespace RentCar2025.Controllers
                                     header.Cell().BorderBottom(1).Padding(5).Text("Vehículo").SemiBold().FontSize(10);
                                     header.Cell().BorderBottom(1).Padding(5).Text("Cliente").SemiBold().FontSize(10);
                                     header.Cell().BorderBottom(1).Padding(5).Text("Empleado").SemiBold().FontSize(10);
-                                    header.Cell().BorderBottom(1).Padding(5).Text("Inspección").SemiBold().FontSize(10);
+                                    // header.Cell().BorderBottom(1).Padding(5).Text("Inspección").SemiBold().FontSize(10); // ELIMINADO
                                     header.Cell().BorderBottom(1).Padding(5).Text("Monto Total").SemiBold().FontSize(10);
                                     header.Cell().BorderBottom(1).Padding(5).Text("Estado").SemiBold().FontSize(10);
                                 });
@@ -607,11 +618,11 @@ namespace RentCar2025.Controllers
                                 foreach (var renta in rentaList)
                                 {
                                     var montoTotal = renta.MontoPorDia * renta.CantidadDias;
-                                    table.Cell().BorderBottom(0.5f).BorderColor(Colors.Grey.Lighten2).Padding(5).Text(renta.FechaRenta?.ToShortDateString() ?? "");
+                                    table.Cell().BorderBottom(0.5f).BorderColor(Colors.Grey.Lighten2).Padding(5).Text(renta.FechaRenta.ToShortDateString() ?? "");
                                     table.Cell().BorderBottom(0.5f).BorderColor(Colors.Grey.Lighten2).Padding(5).Text(renta.Vehiculo.Descripcion);
                                     table.Cell().BorderBottom(0.5f).BorderColor(Colors.Grey.Lighten2).Padding(5).Text(renta.Cliente.Nombre);
                                     table.Cell().BorderBottom(0.5f).BorderColor(Colors.Grey.Lighten2).Padding(5).Text(renta.Empleado.Nombre);
-                                    table.Cell().BorderBottom(0.5f).BorderColor(Colors.Grey.Lighten2).Padding(5).Text(renta.Inspeccion?.Id.ToString() ?? "N/A");
+                                    // table.Cell().BorderBottom(0.5f).BorderColor(Colors.Grey.Lighten2).Padding(5).Text(renta.Inspeccion?.Id.ToString() ?? "N/A"); // ELIMINADO
                                     table.Cell().BorderBottom(0.5f).BorderColor(Colors.Grey.Lighten2).Padding(5).Text(montoTotal.ToString("C"));
                                     table.Cell().BorderBottom(0.5f).BorderColor(Colors.Grey.Lighten2).Padding(5).Text(renta.Estado ? "Activa" : "Inactiva").FontColor(renta.Estado ? Colors.Green.Darken2 : Colors.Red.Darken2);
                                 }

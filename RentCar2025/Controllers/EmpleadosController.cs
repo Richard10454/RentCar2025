@@ -14,6 +14,12 @@ using QuestPDF.Infrastructure;
 
 namespace RentCar2025.Controllers
 {
+    // -------------------------------------------------------------------
+    // ESTA CLASE 'Utilidades' FUE ELIMINADA DE AQUÍ
+    // para resolver el conflicto. ASUMIMOS que existe en otro archivo
+    // dentro del mismo namespace (o se agregó un 'using').
+    // -------------------------------------------------------------------
+
     public class EmpleadosController : Controller
     {
         private readonly RentCarDbContext _context;
@@ -25,7 +31,6 @@ namespace RentCar2025.Controllers
             QuestPDF.Settings.License = LicenseType.Community;
         }
 
-        // GET: Empleados
         public async Task<IActionResult> Index(string searchString, int pageNumber = 1)
         {
             int pageSize = 10;
@@ -53,7 +58,6 @@ namespace RentCar2025.Controllers
             return View(empleadosPaginados);
         }
 
-        // GET: Empleados/Details/5
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -71,17 +75,26 @@ namespace RentCar2025.Controllers
             return View(empleado);
         }
 
-        // GET: Empleados/Create
         public IActionResult Create()
         {
             return View();
         }
 
-        // POST: Empleados/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,Nombre,Cedula,TandaLabor,PorcientoComision,FechaIngreso,Estado")] Empleado empleado)
         {
+            // La llamada a Utilidades.ValidaCedula ya no es ambigua
+            if (!Utilidades.ValidaCedula(empleado.Cedula))
+            {
+                ModelState.AddModelError("Cedula", "El número de Cédula");
+            }
+
+            if (await _context.Empleados.AnyAsync(e => e.Cedula == empleado.Cedula))
+            {
+                ModelState.AddModelError("Cedula", "Ya existe un empleado registrado con esta Cédula.");
+            }
+
             if (ModelState.IsValid)
             {
                 _context.Add(empleado);
@@ -92,7 +105,6 @@ namespace RentCar2025.Controllers
             return View(empleado);
         }
 
-        // GET: Empleados/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -108,7 +120,6 @@ namespace RentCar2025.Controllers
             return View(empleado);
         }
 
-        // POST: Empleados/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("Id,Nombre,Cedula,TandaLabor,PorcientoComision,FechaIngreso,Estado")] Empleado empleado)
@@ -116,6 +127,17 @@ namespace RentCar2025.Controllers
             if (id != empleado.Id)
             {
                 return NotFound();
+            }
+
+            // La llamada a Utilidades.ValidaCedula ya no es ambigua
+            if (!Utilidades.ValidaCedula(empleado.Cedula))
+            {
+                ModelState.AddModelError("Cedula", "El número de Cédula no es válido");
+            }
+
+            if (await _context.Empleados.AnyAsync(e => e.Cedula == empleado.Cedula && e.Id != empleado.Id))
+            {
+                ModelState.AddModelError("Cedula", "Ya existe otro empleado registrado con esta Cédula.");
             }
 
             if (ModelState.IsValid)
@@ -143,7 +165,6 @@ namespace RentCar2025.Controllers
             return View(empleado);
         }
 
-        // GET: Empleados/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -161,7 +182,6 @@ namespace RentCar2025.Controllers
             return View(empleado);
         }
 
-        // POST: Empleados/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
@@ -197,8 +217,6 @@ namespace RentCar2025.Controllers
             return _context.Empleados.Any(e => e.Id == id);
         }
 
-        /// <param name="searchString"
-        /// <param name="download"
         [HttpGet]
         public async Task<IActionResult> GeneratePdfReport(string searchString, bool download = true)
         {
@@ -207,7 +225,7 @@ namespace RentCar2025.Controllers
             if (!string.IsNullOrEmpty(searchString))
             {
                 empleados = empleados.Where(e => e.Nombre.Contains(searchString) ||
-                                                    e.Cedula.Contains(searchString));
+                                                 e.Cedula.Contains(searchString));
             }
 
             var empleadoList = await empleados.OrderBy(e => e.Nombre).ToListAsync();
@@ -238,12 +256,12 @@ namespace RentCar2025.Controllers
                             {
                                 table.ColumnsDefinition(columns =>
                                 {
-                                    columns.RelativeColumn(2); // Nombre
-                                    columns.RelativeColumn(); // Cédula
-                                    columns.RelativeColumn(); // Tanda Labor
-                                    columns.RelativeColumn(); // Porciento Comision
-                                    columns.RelativeColumn(); // Fecha Ingreso
-                                    columns.RelativeColumn(); // Estado
+                                    columns.RelativeColumn(2);
+                                    columns.RelativeColumn();
+                                    columns.RelativeColumn();
+                                    columns.RelativeColumn();
+                                    columns.RelativeColumn();
+                                    columns.RelativeColumn();
                                 });
 
                                 table.Header(header =>
@@ -261,7 +279,7 @@ namespace RentCar2025.Controllers
                                     table.Cell().BorderBottom(0.5f).BorderColor(Colors.Grey.Lighten2).Padding(5).Text(empleado.Nombre);
                                     table.Cell().BorderBottom(0.5f).BorderColor(Colors.Grey.Lighten2).Padding(5).Text(empleado.Cedula);
                                     table.Cell().BorderBottom(0.5f).BorderColor(Colors.Grey.Lighten2).Padding(5).Text(empleado.TandaLabor);
-                                    table.Cell().BorderBottom(0.5f).BorderColor(Colors.Grey.Lighten2).Padding(5).Text(empleado.PorcientoComision.ToString("P0")); // Porciento Comision
+                                    table.Cell().BorderBottom(0.5f).BorderColor(Colors.Grey.Lighten2).Padding(5).Text(empleado.PorcientoComision.ToString("P0"));
                                     table.Cell().BorderBottom(0.5f).BorderColor(Colors.Grey.Lighten2).Padding(5).Text(empleado.FechaIngreso.ToShortDateString());
                                     table.Cell().BorderBottom(0.5f).BorderColor(Colors.Grey.Lighten2).Padding(5).Text(empleado.Estado ? "Activo" : "Inactivo").FontColor(empleado.Estado ? Colors.Green.Darken2 : Colors.Red.Darken2);
                                 }

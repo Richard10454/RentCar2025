@@ -10,9 +10,81 @@ using System.IO;
 using QuestPDF.Fluent;
 using QuestPDF.Helpers;
 using QuestPDF.Infrastructure;
+using System.Text.RegularExpressions; // Necesario para la validación numérica opcional
 
 namespace RentCar2025.Controllers
 {
+    public static class Utilidades
+    {
+
+        public static bool ValidaCedula(string pCedula)
+        {
+            if (string.IsNullOrEmpty(pCedula))
+                return false;
+
+            int vnTotal = 0;
+            string vcCedula = pCedula.Replace("-", "").Trim();
+            int pLongCed = vcCedula.Length;
+            int[] digitoMult = new int[11] { 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1 };
+
+            if (pLongCed != 11)
+                return false;
+
+
+            if (!vcCedula.All(char.IsDigit))
+                return false;
+
+            for (int vDig = 1; vDig <= pLongCed; vDig++)
+            {
+                int digito = Int32.Parse(vcCedula.Substring(vDig - 1, 1));
+                int vCalculo = digito * digitoMult[vDig - 1];
+
+                if (vCalculo < 10)
+                    vnTotal += vCalculo;
+                else
+
+                    vnTotal += (vCalculo / 10) + (vCalculo % 10);
+            }
+
+
+            return (vnTotal % 10 == 0);
+        }
+
+        // Nuevo método de validación para el número de tarjeta de crédito
+        public static bool ValidaNumeroTarjeta(string pNoTarjetaCR)
+        {
+            if (string.IsNullOrEmpty(pNoTarjetaCR))
+            {
+                // Permitimos que sea null/vacío si la tarjeta es opcional, si es obligatoria
+                // esta validación debe retornar false. Asumiré que debe ser obligatorio.
+                // return false; // Descomenta si debe ser obligatorio y no acepta vacío
+                return true; // Asumo que si está vacío es válido si el campo es opcional
+            }
+
+            // Remueve cualquier espacio o guión si los permites en la entrada
+            string vcTarjeta = pNoTarjetaCR.Replace(" ", "").Replace("-", "").Trim();
+
+            // 1. Validar longitud (Ejemplo: 16 dígitos)
+            const int LongitudEsperada = 16;
+            if (vcTarjeta.Length != LongitudEsperada)
+            {
+                return false;
+            }
+
+            // 2. Validar que sean solo dígitos
+            // Usa Regex para validar si contiene solo dígitos
+            if (!Regex.IsMatch(vcTarjeta, @"^\d+$"))
+            {
+                return false;
+            }
+
+            // Opcional: Se podría agregar la validación del Algoritmo de Luhn aquí
+
+            return true;
+        }
+
+    }
+
     public class ClientesController : Controller
     {
         private readonly RentCarDbContext _context;
@@ -71,15 +143,34 @@ namespace RentCar2025.Controllers
             return View();
         }
 
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,Nombre,Cedula,NoTarjetaCR,LimiteCredito,TipoPersona,Estado")] Cliente cliente)
         {
+            // Validaciones
+            if (!Utilidades.ValidaCedula(cliente.Cedula))
+            {
+                ModelState.AddModelError("Cedula", "El número de Cédula no es válido.");
+            }
+
+            if (await _context.Clientes.AnyAsync(c => c.Cedula == cliente.Cedula))
+            {
+                ModelState.AddModelError("Cedula", "Ya existe un cliente registrado con esta Cédula.");
+            }
+
+            // **NUEVA VALIDACIÓN PARA LA TARJETA DE CRÉDITO**
+            if (!string.IsNullOrEmpty(cliente.NoTarjetaCR) && !Utilidades.ValidaNumeroTarjeta(cliente.NoTarjetaCR))
+            {
+                ModelState.AddModelError("NoTarjetaCR", "El número de Tarjeta de Crédito no es válido. Debe tener 16 dígitos y solo contener números.");
+            }
+            // ----------------------------------------------------
+
             if (ModelState.IsValid)
             {
                 _context.Add(cliente);
                 await _context.SaveChangesAsync();
-                TempData["SuccessMessage"] = "¡Cliente registrado exitosamente!";
+                TempData["SuccessMessage"] = "¡Cliente registrado exitosamente! 🥳";
                 return RedirectToAction(nameof(Index));
             }
             return View(cliente);
@@ -109,13 +200,32 @@ namespace RentCar2025.Controllers
                 return NotFound();
             }
 
+            // Validaciones
+            if (!Utilidades.ValidaCedula(cliente.Cedula))
+            {
+                ModelState.AddModelError("Cedula", "El número de Cédula no es válido");
+            }
+
+            if (await _context.Clientes.AnyAsync(c => c.Cedula == cliente.Cedula && c.Id != cliente.Id))
+            {
+                ModelState.AddModelError("Cedula", "Ya existe otro cliente registrado con esta Cédula.");
+            }
+
+            // **NUEVA VALIDACIÓN PARA LA TARJETA DE CRÉDITO**
+            if (!string.IsNullOrEmpty(cliente.NoTarjetaCR) && !Utilidades.ValidaNumeroTarjeta(cliente.NoTarjetaCR))
+            {
+                ModelState.AddModelError("NoTarjetaCR", "El número de Tarjeta de Crédito no es válido. Debe tener 16 dígitos y solo contener números.");
+            }
+            // ----------------------------------------------------
+
+
             if (ModelState.IsValid)
             {
                 try
                 {
                     _context.Update(cliente);
                     await _context.SaveChangesAsync();
-                    TempData["SuccessMessage"] = "¡Cliente actualizado exitosamente!";
+                    TempData["SuccessMessage"] = "¡Cliente actualizado exitosamente! 🚀";
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -154,18 +264,18 @@ namespace RentCar2025.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var tieneInspecciones = await _context.Inspecciones.AnyAsync(i => i.ClienteId == id);
             var tieneRentas = await _context.Rentas.AnyAsync(r => r.ClienteId == id);
+            var tieneInspecciones = await _context.Inspecciones.AnyAsync(i => i.ClienteId == id);
 
             if (tieneRentas)
             {
-                TempData["ErrorMessage"] = "¡No se puede eliminar este cliente porque tiene rentas asociadas!";
+                TempData["ErrorMessage"] = "¡No se puede eliminar este cliente porque tiene rentas asociadas! 🚫";
                 return RedirectToAction(nameof(Index));
             }
 
             if (tieneInspecciones)
             {
-                TempData["ErrorMessage"] = "¡No se puede eliminar este cliente porque tiene inspecciones asociadas!";
+                TempData["ErrorMessage"] = "¡No se puede eliminar este cliente porque tiene inspecciones asociadas! 🚫";
                 return RedirectToAction(nameof(Index));
             }
 
@@ -176,7 +286,7 @@ namespace RentCar2025.Controllers
             }
 
             await _context.SaveChangesAsync();
-            TempData["SuccessMessage"] = "¡Cliente eliminado exitosamente!";
+            TempData["SuccessMessage"] = "¡Cliente eliminado exitosamente! 👋";
             return RedirectToAction(nameof(Index));
         }
 

@@ -557,12 +557,11 @@
                 @foreach (var item in Model)
                 {
                     <tr>
-                        <td>@item.Empleado?.Nombre</td>
-                        <td>@item.Vehiculo?.Descripcion</td>
-                        <td>@item.Cliente?.Nombre</td>
-                        <td>@item.FechaRenta?.ToString("dd/MM/yyyy")</td>
-                        <td>@item.FechaDevolucion?.ToString("dd/MM/yyyy")</td>
-                        <td>@item.MontoPorDia.ToString("C")</td>
+                        <td>@item.Empleado.Nombre</td>
+                        <td>@item.Vehiculo.Descripcion</td>
+                        <td>@item.Cliente.Nombre</td>
+                        <td>@item.FechaRenta.ToString("dd/MM/yyyy")</td>
+<td>@(item.FechaDevolucion.HasValue ? item.FechaDevolucion.Value.ToString("dd/MM/yyyy") : "N/A")</td>                        <td>@item.MontoPorDia.ToString("C")</td>
                         <td>@item.CantidadDias</td>
                         <td>@item.Comentario</td>
                         <td>

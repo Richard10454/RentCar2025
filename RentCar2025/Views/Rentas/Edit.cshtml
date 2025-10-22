@@ -63,7 +63,7 @@
             background: #fff;
             padding: 40px;
             border-radius: 16px;
-            box-shadow: 0 5px 25px rgba(0,0,0,0.35);
+            box-shadow: 0 5px 25px rgba(0, 0, 0, 0.35);
             opacity: 0;
             transform: scale(0.8);
             transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
@@ -111,15 +111,15 @@
             transform: translateY(15px);
             transition: all 0.3s ease;
         }
-
-        .form_container.active .input_container:nth-child(1) { transition-delay: 0.1s; }
-        .form_container.active .input_container:nth-child(2) { transition-delay: 0.15s; }
-        .form_container.active .input_container:nth-child(3) { transition-delay: 0.2s; }
-        .form_container.active .input_container:nth-child(4) { transition-delay: 0.25s; }
-        .form_container.active .input_container:nth-child(5) { transition-delay: 0.3s; }
-        .form_container.active .input_container:nth-child(6) { transition-delay: 0.35s; }
-        .form_container.active .input_container:nth-child(7) { transition-delay: 0.4s; }
-        .form_container.active .input_container:nth-child(8) { transition-delay: 0.45s; }
+        /* Adjusted transition delays to match the number of fields (8) */
+        .form_container.active .input_container:nth-child(1) { transition-delay: 0.3s; }
+        .form_container.active .input_container:nth-child(2) { transition-delay: 0.35s; }
+        .form_container.active .input_container:nth-child(3) { transition-delay: 0.4s; }
+        .form_container.active .input_container:nth-child(4) { transition-delay: 0.45s; }
+        .form_container.active .input_container:nth-child(5) { transition-delay: 0.5s; }
+        .form_container.active .input_container:nth-child(6) { transition-delay: 0.55s; }
+        .form_container.active .input_container:nth-child(7) { transition-delay: 0.6s; }
+        .form_container.active .input_container:nth-child(8) { transition-delay: 0.65s; }
 
         .form_container.active .input_container {
             opacity: 1;
@@ -140,9 +140,12 @@
             height: 50px;
         }
         
+        .input_box input[type="date"] {
+            padding-right: 15px;
+        }
+
         .input_box input,
-        .input_box select,
-        .input_box span.display_text {
+        .input_box select {
             height: 100%;
             width: 100%;
             border: none;
@@ -158,11 +161,7 @@
             color: #0b0217;
         }
         
-        /* New style for read-only fields */
-        .input_box span.display_text {
-            border-bottom: 2px solid #ddd;
-            padding-left: 0;
-        }
+        /* Removed .input_box span.display_text styles as they are no longer used */
 
         .input_box input:focus,
         .input_box select:focus {
@@ -196,10 +195,7 @@
             color: #7d2ae8;
         }
         
-        /* Style for the non-interactive icon on read-only fields */
-        .input_box .read-only-icon {
-            color: #aaaaaa;
-        }
+        /* Removed .input_box .read-only-icon style */
 
         .toggle_switch_container {
             margin-top: 30px;
@@ -210,7 +206,7 @@
             color: #0b0217;
             opacity: 0;
             transform: translateY(20px);
-            transition: all 0.4s ease 0.5s;
+            transition: all 0.4s ease 0.7s; /* Adjusted delay */
             grid-column: 1 / -1;
             justify-content: center;
         }
@@ -279,7 +275,7 @@
             gap: 20px;
             margin-top: 40px;
             opacity: 0;
-            transition: opacity 0.3s ease 0.6s;
+            transition: opacity 0.3s ease 0.8s; /* Adjusted delay */
             grid-column: 1 / -1;
         }
 
@@ -380,8 +376,7 @@
                 padding: 20px;
             }
             .input_box input,
-            .input_box select,
-            .input_box span.display_text {
+            .input_box select {
                 font-size: 14px;
             }
         }
@@ -398,65 +393,79 @@
                 <input type="hidden" asp-for="Id" />
                 
                 <div class="form-grid">
-                    @* Display Read-Only Fields *@
+                    @* Editable Fields - SELECTs *@
                     <div class="input_container">
-                        <label class="input_label">Empleado</label>
+                        <label asp-for="EmpleadoId" class="input_label">Empleado</label>
                         <div class="input_box">
-                            <span class="display_text">@Html.DisplayFor(model => model.Empleado.Nombre)</span>
-                            <i class="bi bi-person-badge read-only-icon"></i>
+                            <select asp-for="EmpleadoId" asp-items="ViewBag.EmpleadoId">
+                                <option value="">Seleccione empleado</option>
+                            </select>
+                            <i class="bi bi-person-badge"></i>
                         </div>
-                    </div>
-    
-                    <div class="input_container">
-                        <label class="input_label">Vehículo</label>
-                        <div class="input_box">
-                            <span class="display_text">@Html.DisplayFor(model => model.Vehiculo.Descripcion)</span>
-                            <i class="bi bi-car-front read-only-icon"></i>
-                        </div>
+                        <span asp-validation-for="EmpleadoId" class="text-danger"></span>
                     </div>
 
                     <div class="input_container">
-                        <label class="input_label">Cliente</label>
+                        <label asp-for="VehiculoId" class="input_label">Vehículo</label>
                         <div class="input_box">
-                            <span class="display_text">@Html.DisplayFor(model => model.Cliente.Nombre)</span>
-                            <i class="bi bi-person read-only-icon"></i>
+                            <select asp-for="VehiculoId" asp-items="ViewBag.VehiculoId">
+                                <option value="">Seleccione vehículo</option>
+                            </select>
+                            <i class="bi bi-car-front"></i>
                         </div>
+                        <span asp-validation-for="VehiculoId" class="text-danger"></span>
                     </div>
 
                     <div class="input_container">
-                        <label class="input_label">Fecha de Renta</label>
+                        <label asp-for="ClienteId" class="input_label">Cliente</label>
                         <div class="input_box">
-                            <span class="display_text">@Html.DisplayFor(model => model.FechaRenta)</span>
-                            <i class="bi bi-calendar read-only-icon"></i>
+                            <select asp-for="ClienteId" asp-items="ViewBag.ClienteId">
+                                <option value="">Seleccione cliente</option>
+                            </select>
+                            <i class="bi bi-person"></i>
                         </div>
+                        <span asp-validation-for="ClienteId" class="text-danger"></span>
+                    </div>
+
+                    @* Editable Fields - INPUTs *@
+                    <div class="input_container">
+                        <label asp-for="FechaRenta" class="input_label">Fecha de Renta</label>
+                        <div class="input_box">
+                            <input asp-for="FechaRenta" type="date" />
+                            <i class="bi bi-calendar"></i>
+                        </div>
+                        <span asp-validation-for="FechaRenta" class="text-danger"></span>
                     </div>
 
                     <div class="input_container">
-                        <label class="input_label">Fecha de Devolución</label>
+                        <label asp-for="FechaDevolucion" class="input_label">Fecha de Devolución</label>
                         <div class="input_box">
-                            <span class="display_text">@Html.DisplayFor(model => model.FechaDevolucion)</span>
-                            <i class="bi bi-calendar-check read-only-icon"></i>
+                            <input asp-for="FechaDevolucion" type="date" />
+                            <i class="bi bi-calendar-check"></i>
                         </div>
+                        <span asp-validation-for="FechaDevolucion" class="text-danger"></span>
                     </div>
                     
                     <div class="input_container">
-                        <label class="input_label">Monto por Día</label>
+                        <label asp-for="MontoPorDia" class="input_label">Monto por Día</label>
                         <div class="input_box">
-                            <span class="display_text">@Html.DisplayFor(model => model.MontoPorDia)</span>
-                            <i class="bi bi-cash-stack read-only-icon"></i>
+                            <input asp-for="MontoPorDia" placeholder="Monto por día" />
+                            <i class="bi bi-cash-stack"></i>
                         </div>
+                        <span asp-validation-for="MontoPorDia" class="text-danger"></span>
                     </div>
                     
                     <div class="input_container">
-                        <label class="input_label">Cantidad de Días</label>
+                        <label asp-for="CantidadDias" class="input_label">Cantidad de Días</label>
                         <div class="input_box">
-                            <span class="display_text">@Html.DisplayFor(model => model.CantidadDias)</span>
-                            <i class="bi bi-calendar-week read-only-icon"></i>
+                            <input asp-for="CantidadDias" placeholder="Cantidad de días" />
+                            <i class="bi bi-calendar-week"></i>
                         </div>
+                        <span asp-validation-for="CantidadDias" class="text-danger"></span>
                     </div>
 
                     <div class="input_container">
-                        <label class="input_label">Comentario</label>
+                        <label asp-for="Comentario" class="input_label">Comentario</label>
                         <div class="input_box">
                             <input asp-for="Comentario" placeholder="Comentario" />
                             <i class="bi bi-chat-text"></i>
@@ -467,7 +476,8 @@
 
                 <div class="toggle_switch_container">
                     <label class="switch">
-                        <input asp-for="Estado" type="checkbox" id="estadoToggle" checked="@Model?.Estado" />
+                        @* Ensure the 'checked' attribute is correctly set based on the model's Estado property. *@
+                        <input asp-for="Estado" type="checkbox" id="estadoToggle" checked="@(Model?.Estado ?? false)" />
                         <span class="slider round"></span>
                     </label>
                     <label for="estadoToggle" class="toggle_label">Activo</label>
@@ -497,10 +507,6 @@
         });
     </script>
 
-    @section Scripts {
-        @{
-            await Html.RenderPartialAsync("_ValidationScriptsPartial");
-        }
-    }
+
 </body>
 </html>

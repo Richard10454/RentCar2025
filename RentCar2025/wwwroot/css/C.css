@@ -1,0 +1,404 @@
+﻿* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Poppins", sans-serif;
+}
+
+body {
+    background-image: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background-size: cover;
+    background-position: center;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+}
+
+.form_container {
+    max-width: 600px;
+    width: 100%;
+    background: #fff;
+    padding: 40px;
+    border-radius: 16px;
+    box-shadow: 0 15px 35px rgba(0,0,0,0.25);
+    position: relative;
+}
+
+.form_close {
+    position: absolute;
+    top: 15px;
+    right: 20px;
+    color: #0b0217;
+    font-size: 22px;
+    opacity: 0.7;
+    cursor: pointer;
+    transition: transform 0.2s, opacity 0.2s;
+}
+
+    .form_close:hover {
+        opacity: 1;
+        transform: rotate(90deg);
+    }
+
+.form_container h2 {
+    font-size: 26px;
+    color: #0b0217;
+    text-align: center;
+    margin-bottom: 30px;
+    font-weight: 600;
+}
+
+.input_container {
+    position: relative;
+    margin-top: 25px;
+}
+
+.input_label {
+    display: block;
+    margin-bottom: 8px;
+    font-size: 14px;
+    color: #555;
+    font-weight: 500;
+}
+
+.input_box {
+    position: relative;
+    width: 100%;
+    height: 50px;
+}
+
+    .input_box input,
+    .input_box select {
+        height: 100%;
+        width: 100%;
+        border: none;
+        outline: none;
+        padding: 0 35px;
+        font-size: 16px;
+        border-bottom: 2px solid #aaaaaa;
+        transition: border-color 0.2s ease;
+        background: transparent;
+        appearance: none;
+    }
+
+        .input_box input:focus,
+        .input_box select:focus {
+            border-color: #7d2ae8;
+        }
+
+    .input_box i {
+        position: absolute;
+        top: 50%;
+        left: 0;
+        transform: translateY(-50%);
+        font-size: 20px;
+        color: #707070;
+        transition: color 0.2s ease;
+    }
+
+    .input_box input:focus ~ i,
+    .input_box select:focus ~ i {
+        color: #7d2ae8;
+    }
+
+    /* Custom dropdown arrow */
+    .input_box select {
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='%23707070' viewBox='0 0 16 16'%3E%3Cpath d='M8 12L2 6h12L8 12z'/%3E%3C/svg%3E");
+        background-repeat: no-repeat;
+        background-position: right 10px center;
+        background-size: 16px;
+    }
+
+        .input_box select:focus {
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='%237d2ae8' viewBox='0 0 16 16'%3E%3Cpath d='M8 12L2 6h12L8 12z'/%3E%3C/svg%3E");
+        }
+
+/* Estilos mejorados para mensajes de error */
+.text-danger {
+    font-size: 13px;
+    color: #e74c3c;
+    display: block;
+    margin-top: 8px;
+    padding: 10px 14px;
+    background-color: rgba(231, 76, 60, 0.1);
+    border-left: 4px solid #e74c3c;
+    border-radius: 0 6px 6px 0;
+    position: relative;
+    padding-left: 40px;
+    box-shadow: 0 3px 10px rgba(231, 76, 60, 0.15);
+    animation: errorPulse 2s infinite;
+}
+
+.input_box.error input,
+.input_box.error select {
+    border-color: #e74c3c;
+    animation: inputErrorShake 0.4s ease;
+}
+
+.input_box.error i {
+    color: #e74c3c;
+}
+
+.text-danger::before {
+    content: "!";
+    position: absolute;
+    left: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 22px;
+    height: 22px;
+    background-color: #e74c3c;
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    font-weight: bold;
+    box-shadow: 0 2px 5px rgba(231, 76, 60, 0.4);
+}
+
+@keyframes errorPulse {
+    0% {
+        box-shadow: 0 3px 10px rgba(231, 76, 60, 0.15);
+    }
+
+    50% {
+        box-shadow: 0 3px 15px rgba(231, 76, 60, 0.25);
+    }
+
+    100% {
+        box-shadow: 0 3px 10px rgba(231, 76, 60, 0.15);
+    }
+}
+
+@keyframes inputErrorShake {
+    0% {
+        transform: translateX(0);
+    }
+
+    25% {
+        transform: translateX(-5px);
+    }
+
+    50% {
+        transform: translateX(5px);
+    }
+
+    75% {
+        transform: translateX(-5px);
+    }
+
+    100% {
+        transform: translateX(0);
+    }
+}
+
+/* Estilo para resumen de validación */
+.validation-summary-errors {
+    background-color: rgba(231, 76, 60, 0.1);
+    border: 1px solid rgba(231, 76, 60, 0.3);
+    border-radius: 10px;
+    padding: 20px;
+    margin-bottom: 25px;
+    box-shadow: 0 5px 15px rgba(231, 76, 60, 0.15);
+    animation: fadeIn 0.5s ease;
+}
+
+    .validation-summary-errors ul {
+        list-style-type: none;
+        padding-left: 0;
+        margin: 0;
+    }
+
+    .validation-summary-errors li {
+        padding: 10px 15px 10px 45px;
+        margin-bottom: 8px;
+        background-color: rgba(231, 76, 60, 0.08);
+        border-left: 4px solid #e74c3c;
+        border-radius: 0 6px 6px 0;
+        position: relative;
+        font-weight: 500;
+    }
+
+        .validation-summary-errors li::before {
+            content: "!";
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 22px;
+            height: 22px;
+            background-color: #e74c3c;
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            font-weight: bold;
+        }
+
+.toggle_switch_container {
+    margin-top: 30px;
+    display: flex;
+    align-items: center;
+    column-gap: 15px;
+    font-size: 16px;
+    color: #0b0217;
+}
+
+.switch {
+    position: relative;
+    display: inline-block;
+    width: 48px;
+    height: 28px;
+}
+
+    .switch input {
+        opacity: 0;
+        width: 0;
+        height: 0;
+    }
+
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    transition: 0.3s;
+    border-radius: 28px;
+}
+
+    .slider:before {
+        position: absolute;
+        content: "";
+        height: 20px;
+        width: 20px;
+        left: 4px;
+        bottom: 4px;
+        background-color: white;
+        transition: 0.3s;
+        border-radius: 50%;
+    }
+
+input:checked + .slider {
+    background-color: #7d2ae8;
+}
+
+input:focus + .slider {
+    box-shadow: 0 0 1px #7d2ae8;
+}
+
+input:checked + .slider:before {
+    transform: translateX(20px);
+}
+
+.toggle_label {
+    cursor: pointer;
+    font-weight: 500;
+}
+
+.action_buttons {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    margin-top: 40px;
+}
+
+.btn_submit, .btn_back {
+    padding: 14px 30px;
+    border-radius: 10px;
+    font-weight: 500;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    text-align: center;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    cursor: pointer;
+    border: none;
+    font-size: 16px;
+}
+
+.btn_submit {
+    background: #7d2ae8;
+    color: white;
+    box-shadow: 0 5px 15px rgba(125, 42, 232, 0.4);
+}
+
+    .btn_submit:hover {
+        background: #6825c1;
+        transform: translateY(-3px);
+        box-shadow: 0 8px 20px rgba(125, 42, 232, 0.5);
+    }
+
+.btn_back {
+    background: #f1f1f1;
+    color: #333;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+    .btn_back:hover {
+        background: #ddd;
+        transform: translateY(-3px);
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+    }
+
+a {
+    color: #7d2ae8;
+    text-decoration: none;
+    transition: color 0.2s;
+}
+
+    a:hover {
+        color: #6825c1;
+        text-decoration: underline;
+    }
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Efectos de ejemplo para mostrar las alertas */
+.input_container:nth-child(2) .input_box,
+.input_container:nth-child(4) .input_box {
+    animation: inputErrorShake 0.4s ease;
+    animation-delay: 0.5s;
+    animation-fill-mode: both;
+}
+
+.input_container:nth-child(2) .input_box,
+.input_container:nth-child(4) .input_box {
+    border-color: #e74c3c;
+}
+
+.input_container:nth-child(2) i,
+.input_container:nth-child(4) i {
+    color: #e74c3c;
+}
+
+.input_container:nth-child(2) .text-danger,
+.input_container:nth-child(4) .text-danger {
+    display: block;
+    opacity: 1;
+}
+
+.validation-summary-errors {
+    display: block;
+}
+
